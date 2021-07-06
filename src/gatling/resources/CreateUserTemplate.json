@@ -1,0 +1,12 @@
+{
+  "email":"${emailAddress}",
+  "forename":"AIPPerfTest",
+  "id":"AIP Citizen",
+  "password":"${password}",
+  "roles":[
+    {
+      "code":"${role}"
+    }
+  ],
+  "surname":"Citizen"
+}
