@@ -56,6 +56,6 @@ class AIPSimulation extends Simulation {
 
   //Scenario which runs through the AIP Appeal Journey.  The Appeal reference number is output into AIPAppealRef.csv
   setUp(
-    AIPAppeal.inject(nothingFor(1),rampUsers(1) during (1))
+    AIPAppeal.inject(nothingFor(1),rampUsers(24) during (2400))
   ).protocols(httpProtocol)
 }
