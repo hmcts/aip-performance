@@ -14,8 +14,8 @@ object Environment {
   val idamCookieName="SESSION_ID"
   val HttpProtocol = http
   
-  val minThinkTime = 5//80//100//140//5
-  val maxThinkTime = 10//80//100//150//10
+  val minThinkTime = 20//80//100//140//5
+  val maxThinkTime = 40//80//100//150//10
   
   val linkminThinkTime = 10//140//10
   val linkmaxThinkTime = 10//150//40
