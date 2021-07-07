@@ -5,7 +5,7 @@ import io.gatling.core.scenario.Simulation
 import uk.gov.hmcts.reform.cmc.performance.scenarios._
 import uk.gov.hmcts.reform.cmc.performance.scenarios.utils.{EmailNotification, Environment}
 
-class CMCSimulation extends Simulation {
+class AIPSimulation extends Simulation {
 
   val BaseURL = Environment.baseURL
   val aipuserdetails = csv("AIPUserDetails.csv").circular
