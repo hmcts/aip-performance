@@ -28,8 +28,8 @@ val personaldetails = csv("PersonalDetails.csv").circular
 
   //AIP Start Appeal HomePage
   val home = group ("AIP_010_Homepage") {
-    exec(flushHttpCache).exec(flushSessionCookies).exec(flushCookieJar)
-      .exec(http("AIP_010_Homepage")
+    //exec(flushHttpCache).exec(flushSessionCookies).exec(flushCookieJar)
+      exec(http("AIP_010_Homepage")
         .get("/start-appeal")
         .check(CurrentPageCheck.save)
         //.check(CsrfCheck.save)
@@ -96,22 +96,26 @@ val personaldetails = csv("PersonalDetails.csv").circular
         .pause(MinThinkTime, MaxThinkTime)
 
   // Users gets to Login Page after successfully answering the eligibility questions
-  val Login =group("AIP_060_Login_GET") {
+  val LoginHomePage =group("AIP_060_Login_GET") {
     exec (http ("AIP_060_Login_GET")
       .get("/login?register=true")
+      //.get(IdAMURL + "/login")
       .headers(Headers.headers_19)
       .check (status.is (200))
+     // .check(headerRegex("set-cookie:","client_id=iac&state=([0-9a-z-]+?)&scope").saveAs("state"))
+      .check(regex("client_id=iac&state=([0-9a-z-]+?)&scope").saveAs("state"))
       .check(CsrfCheck.save))
   }
 
     .pause(MinThinkTime, MaxThinkTime)
 
   //Login into Application with an IAC Citizen account
-    .group("AIP_080_Login_POST") {
+  val Login  =group("AIP_080_Login_POST") {
       feed(aipuser)
        .exec(http("AIP_080_Login_POST")
-         .post(IdAMURL + "/login?redirect_uri=https%3a%2f%2fimmigration-appeal.perftest.platform.hmcts.net%2fredirectUrl&client_id=iac&state=b14effe6-2e3d-4ee0-8dab-24dfe97ee42f&scope=")
+         .post(IdAMURL + "/login?redirect_uri=https%3a%2f%2fimmigration-appeal.perftest.platform.hmcts.net%2fredirectUrl&client_id=iac&state=${state}&scope=")
          .headers(Headers.headers_113)
+         //.headers(Headers.headers_142)
          .formParam("username", "${aipuser}")
          .formParam("password", "${password}")
          .formParam("save", "Sign in")
@@ -121,6 +125,10 @@ val personaldetails = csv("PersonalDetails.csv").circular
          .check(regex("Your appeal details")))
     }
 
+    .exec { session =>
+      println(session)
+      session
+    }
     .pause(MinThinkTime, MaxThinkTime)
 
   //User gets the About Appeal Page after the have logged in
@@ -154,7 +162,7 @@ val personaldetails = csv("PersonalDetails.csv").circular
     .post("/home-office-reference-number")
     .headers(Headers.headers_34)
     .formParam("_csrf", "${csrf}")
-    .formParam("homeOfficeRefNumber", "${HORef}")
+    .formParam("homeOfficeRefNumber", "123456789")
     .formParam("saveAndContinue", "")
    //.resources(http("request_162")
     .check(CsrfCheck.save)
@@ -171,9 +179,9 @@ val personaldetails = csv("PersonalDetails.csv").circular
     .post("/date-letter-sent")
       .headers(Headers.headers_34)
       .formParam("_csrf", "${csrf}")
-      .formParam("day", "${day}")
-      .formParam("month", "${month}")
-      .formParam("year", "${year}")
+      .formParam("day", "08")
+      .formParam("month", "07")
+      .formParam("year", "2021")
       .formParam("saveAndContinue", "")
       .check(CsrfCheck.save)
       .check(regex("Upload your Home Office decision letter"))
@@ -247,8 +255,8 @@ val personaldetails = csv("PersonalDetails.csv").circular
     .post("/name")
       .headers(Headers.headers_34)
       .formParam("_csrf", "${csrf}")
-      .formParam("givenNames", "${givenname}")
-      .formParam("familyName", "${familyname}")
+      .formParam("givenNames", "Perf Test")
+      .formParam("familyName", "IAC")
       .formParam("saveAndContinue", "")
       .check(CsrfCheck.save)
       .check(regex("What is your date of birth?"))
@@ -264,9 +272,9 @@ val personaldetails = csv("PersonalDetails.csv").circular
     .post("/date-birth")
     .headers(Headers.headers_34)
     .formParam("_csrf", "${csrf}")
-    .formParam("day", "${day}")
-    .formParam("month", "${month}")
-    .formParam("year", "${year}")
+    .formParam("day", "01")
+    .formParam("month", "01")
+    .formParam("year", "1980")
     .formParam("saveAndContinue", "")
     //.resources(http("request_264")
     .check(CsrfCheck.save)
@@ -283,7 +291,7 @@ val personaldetails = csv("PersonalDetails.csv").circular
     .post("/nationality")
       .headers(Headers.headers_34)
       .formParam("_csrf", "${csrf}")
-      .formParam("nationality", "${nationality}")
+      .formParam("nationality", "AF")
       .formParam("saveAndContinue", "")
       .check(CsrfCheck.save)
       .check(regex("What is your address?"))
