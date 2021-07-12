@@ -49,15 +49,15 @@ class AIPSimulation extends Simulation {
 
 
   //Scenario to create users - users will be output to AIPUserDetails.csv
-/*
-    setUp(
-  UserCreationScenario.inject(nothingFor(1),rampUsers(100) during (100))
+
+   /* setUp(
+  UserCreationScenario.inject(nothingFor(1),rampUsers(5) during (5))
 ).protocols(httpProtocol)
 */
 
   //Scenario which runs through the AIP Appeal Journey.  The Appeal reference number is output into AIPAppealRef.csv
   setUp(
-    AIPAppeal.inject(nothingFor(1),rampUsers(23) during (2400))
+    AIPAppeal.inject(nothingFor(1),rampUsers(69) during (2400))
   ).protocols(httpProtocol)
 
 
