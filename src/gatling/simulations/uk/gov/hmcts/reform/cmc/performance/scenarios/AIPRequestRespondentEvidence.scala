@@ -96,7 +96,7 @@ val MaxThinkTime = Environment.maxThinkTime
 
   val IACSearchCase = group ("AIP2_030_SearchCase") {
     exec(http("AIP2_030_SearchCase")
-    .post(IACURL + "/data/internal/searchCases?ctid=Asylum&use_case=WORKBASKET&view=WORKBASKET&page=1&case.appealReferenceNumber=PA/50076/2021")
+    .post(IACURL + "/data/internal/searchCases?ctid=Asylum&use_case=WORKBASKET&view=WORKBASKET&page=1&case.appealReferenceNumber=PA/50079/2021")
       .check(jsonPath("$.results[0].case_id").saveAs("CaseNumber"))
       .check(status.is(200)))
    //   .header("x-xsrf-token", "${xsrfToken}")
@@ -145,13 +145,12 @@ val MaxThinkTime = Environment.maxThinkTime
       .header("x-xsrf-token", "${xsrfToken}")
      // .header("__auth__", "${event}")
      // .header("__userid__", "6e0fdb4f-bbc1-4eb3-97fd-6d071834acef")
-      .body(ElFileBody("SubmitRequestRespondentEvidence.json"))
-      .check(regex("Check your answers"))),
+      .body(ElFileBody("SubmitRequestRespondentEvidence.json")))
+ //     .check(regex("Check your answers"))),
   }
 
   val IACSendRespondentEvidence = group ("AIP2_070_Send") {
     exec(http("AIP2_060_SubmitRequestRespondentEvidence")
-    .post(IACURL + "/data/cases/1625580429075793/events")),
+    .post(IACURL + "/data/cases/${CaseNumber}/events")),
   }
-
 }

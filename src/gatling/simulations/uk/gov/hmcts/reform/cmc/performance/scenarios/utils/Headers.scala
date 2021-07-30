@@ -116,7 +116,8 @@ object Headers {
     "sec-fetch-dest" -> "empty",
     "sec-fetch-mode" -> "cors",
     "sec-fetch-site" -> "same-origin",
-    "x-xsrf-token" -> "VevzzGld-_ud7cJadehqnKYR94XeePYQT-GE")
+    // "x-xsrf-token" -> "VevzzGld-_ud7cJadehqnKYR94XeePYQT-GE"
+  )
 
   //---AIP Header below this point
 
