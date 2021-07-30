@@ -46,6 +46,16 @@ class AIPSimulation extends Simulation {
       .exec(AIP_Appeal.AIPLogout)
     }
 
+  val AIPRequestRespondent = scenario("IAC Request Respondent Evidence")
+    .exitBlockOnFail{
+      exec(AIPRequestRespondentEvidence.IAChome)
+      .exec(AIPRequestRespondentEvidence.IACLogin)
+      .exec(AIPRequestRespondentEvidence.IACSearchCase)
+      .exec(AIPRequestRespondentEvidence.IACSelectCase)
+      .exec(AIPRequestRespondentEvidence.IACRequestRespondentEvidence)
+      .exec(AIPRequestRespondentEvidence.IACSubmitRespondentEvidence)
+    //.exec(AIPRequestRespondentEvidence.IACSendRespondentEvidence)
+    }
 
 
   //Scenario to create users - users will be output to AIPUserDetails.csv
@@ -56,9 +66,14 @@ class AIPSimulation extends Simulation {
 */
 
   //Scenario which runs through the AIP Appeal Journey.  The Appeal reference number is output into AIPAppealRef.csv
-  setUp(
+  /*setUp(
     AIPAppeal.inject(nothingFor(1),rampUsers(69) during (2400))
   ).protocols(httpProtocol)
+*/
 
+  // CaseWorker progressing the case to request respondent evidence
+  setUp(
+    AIPRequestRespondent.inject(nothingFor(1),rampUsers(1) during (1))
+  ).protocols(httpProtocol)
 
 }
