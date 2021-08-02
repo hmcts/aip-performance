@@ -54,7 +54,7 @@ class AIPSimulation extends Simulation {
       .exec(AIPRequestRespondentEvidence.IACSelectCase)
       .exec(AIPRequestRespondentEvidence.IACRequestRespondentEvidence)
       .exec(AIPRequestRespondentEvidence.IACSubmitRespondentEvidence)
-    //.exec(AIPRequestRespondentEvidence.IACSendRespondentEvidence)
+      .exec(AIPRequestRespondentEvidence.IACSendRespondentEvidence)
     }
 
 

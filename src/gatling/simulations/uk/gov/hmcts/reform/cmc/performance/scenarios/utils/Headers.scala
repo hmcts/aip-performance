@@ -118,6 +118,21 @@ object Headers {
     "sec-fetch-site" -> "same-origin",
     // "x-xsrf-token" -> "VevzzGld-_ud7cJadehqnKYR94XeePYQT-GE"
   )
+  val headers_386 = Map(
+    "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.create-event.v2+json;charset=UTF-8",
+    "cache-control" -> "no-cache",
+    "content-type" -> "application/json",
+    "experimental" -> "true",
+    "origin" -> "https://manage-case.perftest.platform.hmcts.net",
+    "pragma" -> "no-cache",
+    "sec-ch-ua" -> """ Not;A Brand";v="99", "Google Chrome";v="91", "Chromium";v="91""",
+    "sec-ch-ua-mobile" -> "?0",
+    "sec-fetch-dest" -> "empty",
+    "sec-fetch-mode" -> "cors",
+    "sec-fetch-site" -> "same-origin",
+  //  "x-xsrf-token" -> "jwzTc6Xb-0HU_EcH_pzIiN662_euOIHFtzmU"
+  )
+
 
   //---AIP Header below this point
 

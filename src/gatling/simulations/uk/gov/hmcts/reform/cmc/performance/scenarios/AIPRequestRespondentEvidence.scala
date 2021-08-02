@@ -63,8 +63,8 @@ val MaxThinkTime = Environment.maxThinkTime
      (exec(http("AIP2_020_Login")
        .post(IdAMURL + "/login?client_id=xuiwebapp&redirect_uri=https://manage-case.perftest.platform.hmcts.net/oauth2/callback&state=${state}&nonce=${nonce}&response_type=code&scope=profile%20openid%20roles%20manage-user%20create-user&prompt=")
        .headers(Headers.headers_64)
-       .formParam("username", "ia.caseofficer.ccd@gmail.com")
-       .formParam("password", "AldgateT0wer")
+       .formParam("username", s"${caseworkeruser}")
+       .formParam("password", s"${caseworkerpassword}")
        .formParam("save", "Sign in")
        .formParam("selfRegistrationEnabled", "false")
        .check(status.is(200))
@@ -96,7 +96,7 @@ val MaxThinkTime = Environment.maxThinkTime
 
   val IACSearchCase = group ("AIP2_030_SearchCase") {
     exec(http("AIP2_030_SearchCase")
-    .post(IACURL + "/data/internal/searchCases?ctid=Asylum&use_case=WORKBASKET&view=WORKBASKET&page=1&case.appealReferenceNumber=PA/50079/2021")
+    .post(IACURL + "/data/internal/searchCases?ctid=Asylum&use_case=WORKBASKET&view=WORKBASKET&page=1&case.appealReferenceNumber=PA/50086/2021")
       .check(jsonPath("$.results[0].case_id").saveAs("CaseNumber"))
       .check(status.is(200)))
    //   .header("x-xsrf-token", "${xsrfToken}")
@@ -130,8 +130,8 @@ val MaxThinkTime = Environment.maxThinkTime
       .check(status.is(200))
       .header("x-xsrf-token", "${xsrfToken}")
     //  .check(jsonPath("$.results[0].event_token").saveAs("event_token"))
-      .check(jsonPath("$.event_token").saveAs("event"))
-      .check(headerRegex("Set-Cookie","XSRF-TOKEN=(.*)").saveAs("xsrfToken")))
+      .check(jsonPath("$.event_token").saveAs("event")))
+      //.check(headerRegex("Set-Cookie","XSRF-TOKEN=(.*)").saveAs("xsrfToken")))
       //.check(substring("HMCTS Manage cases"))),
   }
 
@@ -142,7 +142,7 @@ val MaxThinkTime = Environment.maxThinkTime
       //.post(IACURL + "/data/case-types/Asylum/validate")
       .post(IACURL + "/data/case-types/Asylum/validate?pageId=requestRespondentEvidencerequestRespondentEvidence")
       .headers(Headers.headers_367)
-      .header("x-xsrf-token", "${xsrfToken}")
+     // .header("x-xsrf-token", "${xsrfToken}")
      // .header("__auth__", "${event}")
      // .header("__userid__", "6e0fdb4f-bbc1-4eb3-97fd-6d071834acef")
       .body(ElFileBody("SubmitRequestRespondentEvidence.json")))
@@ -151,6 +151,9 @@ val MaxThinkTime = Environment.maxThinkTime
 
   val IACSendRespondentEvidence = group ("AIP2_070_Send") {
     exec(http("AIP2_060_SubmitRequestRespondentEvidence")
-    .post(IACURL + "/data/cases/${CaseNumber}/events")),
+    .post(IACURL + "/data/cases/${CaseNumber}/events")
+      .headers(Headers.headers_386)
+      .check(substring("send direction"))
+      .body(ElFileBody("SendDirection.json"))),
   }
 }
