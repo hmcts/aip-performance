@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.cmc.performance.scenarios.utils
+package scenarios.utils
 
 import java.io.{BufferedWriter, FileWriter}
 
@@ -30,7 +30,7 @@ object EmailNotification {
         //println("security pin " + session("securitypin").as[String])
         session
     }
-    .doIf("${securitycode.exists()}") {
+    .doIf("#{securitycode.exists()}") {
     exec {
       session =>
         val fw = new BufferedWriter (new FileWriter ("HOLetterDetails.csv", true))
@@ -92,13 +92,13 @@ object EmailNotification {
   
   def findEmailFromNotify(client: NotificationClient, emailAddress: String): Option[String] = {
     var notificationList = client.getNotifications(null, "email", null, null)
-    println(s"Searching notifications for $emailAddress")
+    println(s"Searching notifications for #emailAddress")
     var emailBody = getEmailBodyFromNotifyEmail(notificationList, emailAddress)
     var i = 1
     val maxNotifyPages = 3
     while (i < maxNotifyPages && emailBody.isEmpty && notificationList.getNextPageLink.isPresent) {
       val nextPageLink = notificationList.getNextPageLink.get()
-      println(s"Searching notify emails in next $i page $nextPageLink")
+      println(s"Searching notify emails in next i page nextPageLink")
       val pattern = raw"older_than=([0-9a-zA-Z\-]*)&?".r
       val olderThanId = pattern.findFirstMatchIn(nextPageLink).get.group(1)
       notificationList = client.getNotifications(null, "email", null, olderThanId)
@@ -114,7 +114,7 @@ object EmailNotification {
   def getEmailBodyFromNotifyEmail(notifications: NotificationList, emailAddress: String): Option[String] = {
     for (notification <- notifications.getNotifications.asScala) {
       if (notification.getEmailAddress.get().equals(emailAddress)) {
-        println(s"Found match for email $emailAddress")
+        println(s"Found match for email #emailAddress")
         return Some(notification.getBody)
       }
     }

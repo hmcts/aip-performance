@@ -1,9 +1,13 @@
-package uk.gov.hmcts.reform.cmc.performance.simulations
+package simulations
 
 import io.gatling.core.Predef._
 import io.gatling.core.scenario.Simulation
-import uk.gov.hmcts.reform.cmc.performance.scenarios._
-import uk.gov.hmcts.reform.cmc.performance.scenarios.utils.{Environment}
+import scenarios.{AIPRequestRespondentEvidence, AIP_Appeal, CreateUser}
+import scenarios.utils.Environment
+import scenarios.{AIPRequestRespondentEvidence, AIP_Appeal, CreateUser}
+import scenarios.utils.Environment
+import scenarios._
+import scenarios.utils.Environment
 
 class AIPSimulation extends Simulation {
 
