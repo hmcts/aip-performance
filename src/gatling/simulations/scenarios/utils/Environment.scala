@@ -6,7 +6,7 @@ import io.gatling.http.Predef._
 object Environment {
   
   val httpConfig = scala.util.Properties.envOrElse("httpConfig", "http")
-  val baseURL = scala.util.Properties.envOrElse("baseURL", "https://immigration-appeal.#{env}.platform.hmcts.net")
+  val baseURL = scala.util.Properties.envOrElse("baseURL", "https://manage-case.#{env}.platform.hmcts.net")
   val idamURL = "https://idam-web-public.#{env}.platform.hmcts.net"
   val idamAPIURL = "https://idam-api.#{env}.platform.hmcts.net"
   val idamCookieName="SESSION_ID"
