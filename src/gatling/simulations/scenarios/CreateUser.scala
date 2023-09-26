@@ -11,7 +11,7 @@ object CreateUser {
   val IdamAPIURL = Environment.idamAPIURL
 
   val newUserFeeder = Iterator.continually(Map(
-    "emailAddress" -> ("AIP_Citizen_" + Common.getDay() + Common.randomString(5) + "@mailinator.com"),
+    "emailAddress" -> ("AIPCitizen" + Common.getDay() + Common.randomString(10) + "@mailinator.com"),
     "password" -> "Pa55word11",
     "role" -> "citizen"
   ))

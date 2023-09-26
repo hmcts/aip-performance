@@ -1,12 +1,14 @@
 {
-  "email":"${emailAddress}",
-  "forename":"AIPPerfTest",
-  "id":"AIP Citizen",
-  "password":"${password}",
-  "roles":[
+  "email": "${emailAddress}",
+  "forename": "AIP",
+  "password": "${password}",
+  "roles": [
     {
-      "code":"${role}"
+      "code": "citizen"
     }
   ],
-  "surname":"Citizen"
+  "surname": "Test",
+  "userGroup": {
+    "code": "string"
+  }
 }
