@@ -104,7 +104,7 @@ class AIPSimulation extends Simulation {
 
   //Scenario to create users - users will be output to AIPUserDetails.csv
 
- /*  setUp(
+ /*setUp(
   UserCreationScenario.inject(nothingFor(1),rampUsers(100) during (600))
 ).protocols(httpProtocol)
 */
