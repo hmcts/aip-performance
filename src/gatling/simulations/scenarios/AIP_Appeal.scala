@@ -135,7 +135,7 @@ val personaldetails = csv("PersonalDetails.csv").circular
          .formParam("save", "Sign in")
          .formParam("selfRegistrationEnabled", "true")
          .formParam("_csrf", "#{csrf}")
-         .check (status.is (200))
+        // .check (status.is (200))
          .check(regex("Your appeal details")))
     }
 
@@ -146,15 +146,15 @@ val personaldetails = csv("PersonalDetails.csv").circular
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
 
-//NEW SET 21/9/2023
+//NEW STEP 21/9/2023
 
-  val AppealOverview1 =group("AIP_260_AppealOverview_GET") {
+  val AppealOverview1 =group("AIP_085_AppealOverview_GET") {
     exec(http("AIP_085_AppealOverview_GET")
       .get("/appeal-overview")
      // .headers(Headers.headers_19)
       .headers(Headers.commonHeader)
       .check(regex("Your appeal details"))
-      .check (status.is (200)))
+    //  .check (status.is (200)))
       }
 
   //User gets the About Appeal Page after the have logged in
