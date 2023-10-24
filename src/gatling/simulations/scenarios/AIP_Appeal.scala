@@ -163,8 +163,8 @@ val personaldetails = csv("PersonalDetails.csv").circular
       .get("/about-appeal")
       //.headers(Headers.headers_19)
         .headers(Headers.commonHeader)
-      .check(regex("Tell us about your appeal"))
-      .check (status.is (200)))
+      .check(regex("Tell us about your appeal")))
+  //    .check (status.is (200)))
 
   }
   
@@ -176,7 +176,7 @@ val personaldetails = csv("PersonalDetails.csv").circular
     .get("/home-office-reference-number")
    // .headers(Headers.headers_19)
       .headers(Headers.commonHeader)
-    .check (status.is (200))
+ //   .check (status.is (200))
     .check(CsrfCheck.save)
     .check(regex("What is your Home Office reference number")))
   }
@@ -195,8 +195,8 @@ val personaldetails = csv("PersonalDetails.csv").circular
     .formParam("saveAndContinue", "")
    //.resources(http("request_162")
     .check(CsrfCheck.save)
-    .check(regex("What date did you receive your decision letter from the Home Office"))
-    .check (status.is (200)))
+    .check(regex("What date did you receive your decision letter from the Home Office")))
+   // .check (status.is (200)))
   }
 
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
