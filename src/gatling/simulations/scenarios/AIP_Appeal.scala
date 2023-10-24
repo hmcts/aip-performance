@@ -153,7 +153,7 @@ val personaldetails = csv("PersonalDetails.csv").circular
       .get("/appeal-overview")
      // .headers(Headers.headers_19)
       .headers(Headers.commonHeader)
-      .check(regex("Your appeal details"))
+      .check(regex("Your appeal details")))
     //  .check (status.is (200)))
       }
 
