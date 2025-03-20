@@ -150,7 +150,8 @@ class AIPSimulation extends Simulation {
     //AIPAppeal.inject(nothingFor(1),rampUsers(1) during (100))
     //AIPRequestRespondent.inject(nothingFor(1),rampUsers(1) during (1))
    CombinedScenario.inject(rampUsers(5).during(250))
-  ).protocols(httpProtocol)
+  ).protocols(httpProtocol).assertions(global.successfulRequests.percent.gte(90),
+   details("AIP2_130_Logout").successfulRequests.percent.gte(20))
 
 
   // CaseWorker progressing the case to request respondent evidence
