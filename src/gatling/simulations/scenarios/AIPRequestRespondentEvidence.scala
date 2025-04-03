@@ -3,8 +3,7 @@ package scenarios
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
-import scenarios.AIP_Appeal.{MaxThinkTime, MinThinkTime}
-import scenarios.utils.{CurrentPageCheck, Environment, Headers, Common}
+import scenarios.utils.{Environment, Headers, Common}
 
 import scala.concurrent.duration.DurationInt
 
@@ -88,7 +87,6 @@ val MaxThinkTime = Environment.maxThinkTime
  .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
   //Searches for Appeal cases Need to capture Case ID- [{"case_id":"1625580429075793","supplementary_data
-
   val IACSearchCase = group ("AIP2_030_SearchCase") {
     exec(http("AIP2_030_ReadAccess")
       .get(IACURL + "/aggregated/caseworkers/:uid/jurisdictions?access=read")
@@ -111,11 +109,6 @@ val MaxThinkTime = Environment.maxThinkTime
   }
 
   .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
-
-//    .exec { session =>
-//      println(session)
-//      session
-//    }
 
 
   //Case ID Needs to be passed here

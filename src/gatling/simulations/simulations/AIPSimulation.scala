@@ -72,18 +72,15 @@ class AIPSimulation extends Simulation {
     .exitBlockOnFail{
       exec(_.set("env", s"${env}")
       .set("caseType", "AIP"))
-      .exec(AIP_Appeal.home)
-//      .exec(AIP_Appeal.eligibility)
+      .exec(AIP_Appeal.Home)
       .exec(AIP_Appeal.LoginHomePage)
       .exec(AIP_Appeal.Login)
-//      .exec(AIP_Appeal.AppealOverview1)
       .exec(AIP_Appeal.AboutAppeal)
       .exec(AIP_Appeal.TypeofAppeal)
       .exec(AIP_Appeal.HomeOffice)
       .exec(AIP_Appeal.PersonalDetails)
       .exec(AIP_Appeal.ContactDetails)
       .exec(AIP_Appeal.DecisionType)
-      .exec(AIP_Appeal.PayNow)
 //      .exec(AIP_Appeal.Equality)
       .exec(AIP_Appeal.FeeSupport)
       .exec(AIP_Appeal.CheckAnswers)
@@ -112,7 +109,7 @@ class AIPSimulation extends Simulation {
         .exec(
           CreateUser.CreateCitizen("citizen")
           .pause(10))
-        .exec(AIP_Appeal.home)
+        .exec(AIP_Appeal.Home)
         .exec(AIP_Appeal.LoginHomePage)
         .exec(AIP_Appeal.Login)
         .exec(AIP_Appeal.AboutAppeal)
@@ -121,7 +118,6 @@ class AIPSimulation extends Simulation {
         .exec(AIP_Appeal.PersonalDetails)
         .exec(AIP_Appeal.ContactDetails)
         .exec(AIP_Appeal.DecisionType)
-        .exec(AIP_Appeal.PayNow)
         .exec(AIP_Appeal.FeeSupport)
         .exec(AIP_Appeal.CheckAnswers)
         .exec(AIP_Appeal.AppealOverview)
@@ -144,14 +140,14 @@ class AIPSimulation extends Simulation {
 ).protocols(httpProtocol)
 */
 
-  //Scenario which runs through the AIP Appeal Journey.  The Appeal reference number is output into AIPAppealRef.csv
+  //Scenario which runs through the AIP Appeal Journey. The Appeal reference number is output into AIPAppealRef.csv
   //this was run previous for 69 users with a 2400 rampup
- setUp(
-    //AIPAppeal.inject(nothingFor(1),rampUsers(1) during (100))
-    //AIPRequestRespondent.inject(nothingFor(1),rampUsers(1) during (1))
-   CombinedScenario.inject(rampUsers(5).during(250))
-  ).protocols(httpProtocol).assertions(global.successfulRequests.percent.gte(90),
-   details("AIP2_130_Logout").successfulRequests.percent.gte(20))
+  setUp(
+    CombinedScenario.inject(rampUsers(5).during(250))
+  ).protocols(httpProtocol).assertions(
+      global.successfulRequests.percent.gte(90),
+      details("AIP2_130_Logout").successfulRequests.percent.gte(20)
+  )
 
 
   // CaseWorker progressing the case to request respondent evidence
