@@ -25,7 +25,7 @@ class AIPSimulation extends Simulation {
   val environment = testType match {
    case "perftest" => "perftest"
    case "aat" => "aat"
-   case "pipeline" => "aat"
+   case "pipeline" => "perftest"
    case _ => "perftest"
   }
     /* ******************************** */

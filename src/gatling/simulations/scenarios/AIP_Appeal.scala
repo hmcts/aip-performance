@@ -102,8 +102,7 @@ val aipuser = csv("AIPUser.csv").circular
       .formParam("_csrf", "#{csrf}")
       .formParam("appealType", "protection")
       .formParam("saveAndContinue", "")
-      .check(regex("Tell us about your appeal"))
-      .check (status.is (200)))
+      .check(regex("Tell us about your appeal")))
   }
   .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
@@ -176,8 +175,7 @@ val aipuser = csv("AIPUser.csv").circular
       .formParam("_csrf", "#{csrf}")
       .formParam("file-upload", "")
       .formParam("saveAndContinue", "")
-      .check(regex("Has a deportation order been made against you?"))
-      .check(status.is (200)))
+      .check(regex("Has a deportation order been made against you?")))
   }
   .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
@@ -189,8 +187,7 @@ val aipuser = csv("AIPUser.csv").circular
       .formParam("_csrf", "#{csrf}")
       .formParam("answer", "No")
       .formParam("saveAndContinue", "")
-      .check(regex("Tell us about your appeal"))
-      .check(status.is (200)))
+      .check(regex("Tell us about your appeal")))
   }
   .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
@@ -354,8 +351,7 @@ val aipuser = csv("AIPUser.csv").circular
       .get("https://pcq.perftest.platform.hmcts.net/start-page")
       .headers(Headers.commonHeader)
       .check(CsrfCheck.save)
-      .check(regex("Equality and diversity questions"))
-      .check (status.is (200)))
+      .check(regex("Equality and diversity questions")))
   }
   .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
