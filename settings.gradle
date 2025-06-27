@@ -1,0 +1,5 @@
+rootProject.name = 'AIP-performance'
+
+include ':common-performance'
+
+project(':common-performance').projectDir = file('common/common-performance')
