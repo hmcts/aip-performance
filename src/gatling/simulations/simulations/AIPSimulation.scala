@@ -48,7 +48,7 @@ class AIPSimulation extends Simulation {
   
   
   val httpProtocol = Environment.HttpProtocol
-   .baseUrl(Environment.baseURL.replace("${env}", s"${env}"))
+   .baseUrl(Environment.baseURL.replace("#{env}", s"${env}"))
     //.doNotTrackHeader("1")
     .inferHtmlResources()
     .silentResources
