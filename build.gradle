@@ -83,7 +83,8 @@ configurations {
 
 /* Generate stats per transaction for use in Jenkins*/
 ext {
-    transactionNamesToGraph = ["AIP_010_Homepage"] // set the transactions to graph here
+    transactionNamesToGraph = ["AIP_010_Homepage", "AIP_280_CheckAnswers_POST",
+                               "AIP2_010_Homepage", "AIP2_110_SendDirection"] // set the transactions to graph here
 }
 
 tasks.register('generateStats', JavaExec) {
