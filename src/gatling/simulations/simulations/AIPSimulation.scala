@@ -99,36 +99,35 @@ class AIPSimulation extends Simulation {
       .exec(AIPRequestRespondentEvidence.IACValidateDetails)
       .exec(AIPRequestRespondentEvidence.IACRequestRespondentEvidence)
       .exec(AIPRequestRespondentEvidence.IACLogout)
-//      .exec(AIPRequestRespondentEvidence.IACSubmitRespondentEvidence)
-//      .exec(AIPRequestRespondentEvidence.IACSendRespondentEvidence)
     }
 
+  //This scenario combines the initial AiP appeal and case worker evidence request
   val CombinedScenario = scenario("IAC e2e")
     .exitBlockOnFail {
       exec(_.set("env", s"${env}"))
-        .exec(
-          CreateUser.CreateCitizen("citizen")
-          .pause(10))
-        .exec(AIP_Appeal.Home)
-        .exec(AIP_Appeal.LoginHomePage)
-        .exec(AIP_Appeal.Login)
-        .exec(AIP_Appeal.AboutAppeal)
-        .exec(AIP_Appeal.TypeofAppeal)
-        .exec(AIP_Appeal.HomeOffice)
-        .exec(AIP_Appeal.PersonalDetails)
-        .exec(AIP_Appeal.ContactDetails)
-        .exec(AIP_Appeal.DecisionType)
-        .exec(AIP_Appeal.FeeSupport)
-        .exec(AIP_Appeal.CheckAnswers)
-        .exec(AIP_Appeal.AppealOverview)
-        .exec(AIP_Appeal.AIPLogout)
-        .exec(AIPRequestRespondentEvidence.IAChome)
-        .exec(AIPRequestRespondentEvidence.IACLogin)
-        .exec(AIPRequestRespondentEvidence.IACSearchCase)
-        .exec(AIPRequestRespondentEvidence.IACSelectCase)
-        .exec(AIPRequestRespondentEvidence.IACValidateDetails)
-        .exec(AIPRequestRespondentEvidence.IACRequestRespondentEvidence)
-        .exec(AIPRequestRespondentEvidence.IACLogout)
+      .exec(
+        CreateUser.CreateCitizen("citizen")
+        .pause(10))
+      .exec(AIP_Appeal.Home)
+      .exec(AIP_Appeal.LoginHomePage)
+      .exec(AIP_Appeal.Login)
+      .exec(AIP_Appeal.AboutAppeal)
+      .exec(AIP_Appeal.TypeofAppeal)
+      .exec(AIP_Appeal.HomeOffice)
+      .exec(AIP_Appeal.PersonalDetails)
+      .exec(AIP_Appeal.ContactDetails)
+      .exec(AIP_Appeal.DecisionType)
+      .exec(AIP_Appeal.FeeSupport)
+      .exec(AIP_Appeal.CheckAnswers)
+      .exec(AIP_Appeal.AppealOverview)
+      .exec(AIP_Appeal.AIPLogout)
+      .exec(AIPRequestRespondentEvidence.IAChome)
+      .exec(AIPRequestRespondentEvidence.IACLogin)
+      .exec(AIPRequestRespondentEvidence.IACSearchCase)
+      .exec(AIPRequestRespondentEvidence.IACSelectCase)
+      .exec(AIPRequestRespondentEvidence.IACValidateDetails)
+      .exec(AIPRequestRespondentEvidence.IACRequestRespondentEvidence)
+      .exec(AIPRequestRespondentEvidence.IACLogout)
     }
     .exec(DeleteUser.deleteUser)
 
@@ -145,8 +144,8 @@ class AIPSimulation extends Simulation {
   setUp(
     CombinedScenario.inject(rampUsers(5).during(250))
   ).protocols(httpProtocol).assertions(
-      global.successfulRequests.percent.gte(90),
-      details("AIP2_130_Logout").successfulRequests.percent.gte(20)
+    global.successfulRequests.percent.gte(90),
+    details("AIP2_130_Logout").successfulRequests.percent.gte(20)
   )
 
 

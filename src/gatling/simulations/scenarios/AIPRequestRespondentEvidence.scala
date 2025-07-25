@@ -7,10 +7,9 @@ import scenarios.utils.{Environment, Headers, Common}
 
 import scala.concurrent.duration.DurationInt
 
-/*AIP Appeal is a new Journey which allows an appellant to go through several eligibility questions and if successful
-they can login to the new AIP portal and start an appeal. This script carries out this business journey all the way
-until the appeal is submitted and then captures and stores the appeal reference which we can use in business journeys
-which are still to be developed*/
+/*AIP Request Respondent Evidence is the follow-up to the Appeal journey. Once an appeal has been made, a case worker
+logs into XUI and searches using the HMCTS reference captured beforehand. They htne request evidence from the
+respondent which will have to be provided from a home office worker.*/
 
 object AIPRequestRespondentEvidence {
 
@@ -118,7 +117,6 @@ val MaxThinkTime = Environment.maxThinkTime
       .headers(Headers.secondaryHeader)
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json")
       .header("experimental", "true")
-     // .check(CsrfCheck.save)
       .check(status.is(200))
       .check(regex("Case record for")))
 
@@ -261,7 +259,7 @@ val MaxThinkTime = Environment.maxThinkTime
 
   .group("AIP2_120_ReturnToCase") {
     exec(Common.manageLabelling)
-      .exec(Common.jurisdiction)
+    .exec(Common.jurisdiction)
   }
 
   .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
