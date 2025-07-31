@@ -8,7 +8,7 @@ properties([
         ])
 ])
 
-@Library("Infrastructure@jenkins-alerts-poc")
+@Library("Infrastructure")
 
 def product = "sscs"
 def component = "sya"
