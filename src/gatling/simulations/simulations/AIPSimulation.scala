@@ -105,9 +105,8 @@ class AIPSimulation extends Simulation {
   val CombinedScenario = scenario("IAC e2e")
     .exitBlockOnFail {
       exec(_.set("env", s"${env}"))
-      .exec(
-        CreateUser.CreateCitizen("citizen")
-        .pause(10))
+      .exec(CreateUser.CreateCitizen("citizen"))
+      .pause(10)
       .exec(AIP_Appeal.Home)
       .exec(AIP_Appeal.LoginHomePage)
       .exec(AIP_Appeal.Login)
