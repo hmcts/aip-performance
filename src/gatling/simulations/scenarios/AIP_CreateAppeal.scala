@@ -49,9 +49,9 @@ object AIP_CreateAppeal {
 
   val Eligibility =
 
-    group("AIP_030_StartEligibility") {
+    group("AIP_020_StartEligibility") {
 
-      exec(http("AIP_030_010_StartEligibility")
+      exec(http("AIP_020_010_StartEligibility")
         .get(BaseURL + "/eligibility")
         .headers(Headers.commonHeader)
         .check(CsrfCheck.save)
@@ -61,9 +61,9 @@ object AIP_CreateAppeal {
 
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
-    .group("AIP_040_InDetention") {
+    .group("AIP_030_InDetention") {
 
-      exec(http("AIP_040_010_InDetention")
+      exec(http("AIP_030_010_InDetention")
         .post(BaseURL + "/eligibility")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
@@ -76,9 +76,9 @@ object AIP_CreateAppeal {
 
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
-    .group("AIP_050_ContinueToAppeal") {
+    .group("AIP_040_ContinueToAppeal") {
 
-      exec(http("AIP_050_010_ContinueToAppeal")
+      exec(http("AIP_040_010_ContinueToAppeal")
         .get(BaseURL + "/login?register=true")
         .headers(Headers.commonHeader)
         .check(regex("client_id=iac&state=([0-9a-z-]+?)&nonce").saveAs("state"))
@@ -91,9 +91,9 @@ object AIP_CreateAppeal {
   //Sign in to continue with your appeal
   val LoginLandingPage =
 
-    group("AIP_060_LoadLoginPage") {
+    group("AIP_050_LoadLoginPage") {
 
-      exec(http("AIP_060_010_LoadLoginPage")
+      exec(http("AIP_050_010_LoadLoginPage")
         .get(IdamURL + "/login?redirect_uri=https%3a%2f%2fimmigration-appeal.#{env}.platform.hmcts.net%2fredirectUrl&client_id=iac&state=#{state}&nonce=&scope=")
         .headers(Headers.commonHeader)
         .check(substring("Sign in or create an account"))
@@ -107,9 +107,9 @@ object AIP_CreateAppeal {
   //Login into Application with an IAC Citizen account
   val Login =
 
-    group("AIP_070_Login") {
+    group("AIP_060_Login") {
 
-      exec(http("AIP_070_010_Login")
+      exec(http("AIP_060_010_Login")
         .post(IdamURL + "/login?redirect_uri=https%3a%2f%2fimmigration-appeal.#{env}.platform.hmcts.net%2fredirectUrl&client_id=iac&state=#{state}&nonce=&scope=")
         .headers(Headers.commonHeader)
         .formParam("username", "#{emailAddress}")
@@ -126,9 +126,9 @@ object AIP_CreateAppeal {
   //User gets the About Appeal Page after they have logged in
   val AboutAppeal =
 
-    group("AIP_080_AboutAppeal") {
+    group("AIP_070_AboutAppeal") {
 
-      exec(http("AIP_080_010_AboutAppeal")
+      exec(http("AIP_070_010_AboutAppeal")
         .get(BaseURL + "/about-appeal")
         .headers(Headers.commonHeader)
         .check(substring("Tell us about your appeal")))
@@ -141,9 +141,9 @@ object AIP_CreateAppeal {
   //Go to Type of Appeal Page
   val TypeOfAppeal =
 
-    group("AIP_090_TypeOfAppeal") {
+    group("AIP_080_TypeOfAppeal") {
 
-      exec(http("AIP_090_010_TypeOfAppeal")
+      exec(http("AIP_080_010_TypeOfAppeal")
         .get(BaseURL + "/in-the-uk")
         .headers(Headers.commonHeader)
         .check(CsrfCheck.save)
@@ -154,9 +154,9 @@ object AIP_CreateAppeal {
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
     //In The UK - Yes
-    .group("AIP_100_InTheUk") {
+    .group("AIP_090_InTheUk") {
 
-      exec(http("AIP_100_010_InTheUk")
+      exec(http("AIP_090_010_InTheUk")
         .post(BaseURL + "/in-the-uk")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
@@ -171,9 +171,9 @@ object AIP_CreateAppeal {
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
     //Enter Type of appeal - Protection
-    .group("AIP_110_AppealType") {
+    .group("AIP_100_AppealType") {
 
-      exec(http("AIP_110_010_AppealType")
+      exec(http("AIP_100_010_AppealType")
         .post(BaseURL + "/appeal-type")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
@@ -190,9 +190,9 @@ object AIP_CreateAppeal {
   //User clicks on Home Office & gets Home Office Reference Number Page
   val HomeOfficeDetails =
 
-    group("AIP_120_HomeOfficeDetails") {
+    group("AIP_110_HomeOfficeDetails") {
 
-      exec(http("AIP_120_010_HomeOfficeDetails")
+      exec(http("AIP_110_010_HomeOfficeDetails")
         .get(BaseURL + "/home-office-reference-number")
         .headers(Headers.commonHeader)
         .check(CsrfCheck.save)
@@ -203,9 +203,9 @@ object AIP_CreateAppeal {
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
     //Enter Home Office Letter Reference - this can be any 9-digit number
-    .group("AIP_130_HomeOfficeRef") {
+    .group("AIP_120_HomeOfficeRef") {
 
-      exec(http("AIP_130_010_HomeOfficeRef")
+      exec(http("AIP_120_010_HomeOfficeRef")
         .post(BaseURL + "/home-office-reference-number")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
@@ -219,9 +219,9 @@ object AIP_CreateAppeal {
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
     //Date Home Office Letter Sent this date has to be within the last 14 days
-    .group("AIP_140_DateLetterSent") {
+    .group("AIP_130_DateLetterSent") {
 
-      exec(http("AIP_140_010_DateLetterSent")
+      exec(http("AIP_130_010_DateLetterSent")
         .post(BaseURL + "/date-letter-sent")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
@@ -237,17 +237,16 @@ object AIP_CreateAppeal {
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
     //User uploads the decision letter
-    .group("AIP_150_UploadDecisionLetter") {
+    .group("AIP_140_UploadDecisionLetter") {
 
-      exec(http("AIP_150_010_UploadDecisionLetter")
-        .post(BaseURL + "/home-office-upload-decision-letter/upload")
+      exec(http("AIP_140_010_UploadDecisionLetter")
+        .post(BaseURL + "/home-office-upload-decision-letter/upload?_csrf=#{csrf}")
         .headers(Headers.commonHeader)
         .header("content-type", "multipart/form-data")
         .bodyPart(RawFileBodyPart("file-upload", "HORefusal.pdf")
           .fileName("HORefusal.pdf")
           .transferEncoding("binary"))
         .asMultipartForm
-        .formParam("_csrf", "#{csrf}")
         .check(CsrfCheck.save)
         .check(substring("HORefusal.pdf")))
 
@@ -256,9 +255,9 @@ object AIP_CreateAppeal {
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
     //Save the Decision letter file
-    .group("AIP_160_UploadDecisionLetterSubmit") {
+    .group("AIP_150_UploadDecisionLetterSubmit") {
 
-      exec(http("AIP_160_010_UploadDecisionLetterSubmit")
+      exec(http("AIP_150_010_UploadDecisionLetterSubmit")
         .post(BaseURL + "/home-office-upload-decision-letter")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
@@ -272,9 +271,9 @@ object AIP_CreateAppeal {
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
     //Has a deportation order been made against you? - No
-    .group("AIP_170_DeportationOrder") {
+    .group("AIP_160_DeportationOrder") {
 
-      exec(http("AIP_170__010_DeportationOrder")
+      exec(http("AIP_160__010_DeportationOrder")
         .post(BaseURL + "/deportation-order")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
@@ -291,9 +290,9 @@ object AIP_CreateAppeal {
   //Select Enter Personal Details
   val PersonalDetails =
 
-    group("AIP_180_PersonalDetails") {
+    group("AIP_170_PersonalDetails") {
 
-      exec(http("AIP_130_010_PersonalDetails")
+      exec(http("AIP_170_010_PersonalDetails")
         .get(BaseURL + "/name")
         .headers(Headers.commonHeader)
         .check(CsrfCheck.save)
@@ -304,9 +303,9 @@ object AIP_CreateAppeal {
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
     //Enter Name Details
-    .group("AIP_190_Name") {
+    .group("AIP_180_Name") {
 
-      exec(http("AIP_190_010_Name")
+      exec(http("AIP_180_010_Name")
         .post(BaseURL + "/name")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
@@ -321,9 +320,9 @@ object AIP_CreateAppeal {
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
     //Enter Date of Birth Details
-    .group("AIP_200_DateOfBirth") {
+    .group("AIP_190_DateOfBirth") {
 
-      exec(http("AIP_200_010_DateOfBirth")
+      exec(http("AIP_190_010_DateOfBirth")
         .post(BaseURL + "/date-birth")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
@@ -339,9 +338,9 @@ object AIP_CreateAppeal {
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
     //Enter Nationality
-    .group("AIP_210_Nationality") {
+    .group("AIP_200_Nationality") {
 
-      exec(http("AIP_210_010_Nationality")
+      exec(http("AIP_200_010_Nationality")
         .post(BaseURL + "/nationality")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
@@ -357,9 +356,9 @@ object AIP_CreateAppeal {
     .feed(postcodeFeeder)
 
     //Enter postcode and capture a random address from the returned list
-    .group("AIP_220_PostcodeLookup") {
+    .group("AIP_210_PostcodeLookup") {
 
-      exec(http("AIP_220_010_PostcodeLookup")
+      exec(http("AIP_210_010_PostcodeLookup")
         .post(BaseURL + "/address")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
@@ -374,9 +373,9 @@ object AIP_CreateAppeal {
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
     //Submit address chosen from the returned list
-    .group("AIP_230_SelectAddress") {
+    .group("AIP_220_SelectAddress") {
 
-      exec(http("AIP_230_010_SelectAddress")
+      exec(http("AIP_220_010_SelectAddress")
         .post(BaseURL + "/select-address")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
@@ -384,20 +383,25 @@ object AIP_CreateAppeal {
         .formParam("saveAndContinue", "")
         .check(CsrfCheck.save)
         .check(css("input[name='address-line-1']", "value").saveAs("addressLine1"))
-        .check(css("input[name='address-line-2']", "value").saveAs("addressLine2"))
-        .check(css("input[name='address-town']", "value").saveAs("addressTown"))
-        .check(css("input[name='address-county']", "value").saveAs("addressCounty"))
+        .check(css("input[name='address-line-2']", "value").optional.saveAs("addressLine2"))
+        .check(css("input[name='address-town']", "value").optional.saveAs("addressTown"))
+        .check(css("input[name='address-county']", "value").optional.saveAs("addressCounty"))
         .check(css("input[name='address-postcode']", "value").saveAs("addressPostcode"))
         .check(substring("What is your address")))
 
     }
 
+    //Populate any non-value address lines
+    .doIf("#{addressLine2.isUndefined()}") { exec(_.set("addressLine2", "")) }
+    .doIf("#{addressTown.isUndefined()}") { exec(_.set("addressTown", "")) }
+    .doIf("#{addressCounty.isUndefined()}") { exec(_.set("addressCounty", "")) }
+
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
     //Confirm address
-    .group("AIP_240_ConfirmAddress") {
+    .group("AIP_230_ConfirmAddress") {
 
-      exec(http("AIP_240_010_ConfirmAddress")
+      exec(http("AIP_230_010_ConfirmAddress")
         .post(BaseURL + "/manual-address")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
@@ -417,9 +421,9 @@ object AIP_CreateAppeal {
   //Go to Your Contact Details page
   val ContactDetails =
 
-    group("AIP_250_ContactDetails") {
+    group("AIP_240_ContactDetails") {
 
-      exec(http("AIP_250_010_ContactDetails")
+      exec(http("AIP_240_010_ContactDetails")
         .get(BaseURL + "/contact-preferences")
         .headers(Headers.commonHeader)
         .check(CsrfCheck.save)
@@ -430,9 +434,9 @@ object AIP_CreateAppeal {
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
     //Enter contact preferences
-    .group("AIP_260_ContactPreferences") {
+    .group("AIP_250_ContactPreferences") {
 
-      exec(http("AIP_260_010_ContactPreferences")
+      exec(http("AIP_250_010_ContactPreferences")
         .post(BaseURL + "/contact-preferences")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
@@ -448,9 +452,9 @@ object AIP_CreateAppeal {
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
     //Do you have a sponsor
-    .group("AIP_270_Sponsor") {
+    .group("AIP_260_Sponsor") {
 
-      exec(http("AIP_270_010_Sponsor")
+      exec(http("AIP_260_010_Sponsor")
         .post(BaseURL + "/has-sponsor")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
@@ -468,9 +472,9 @@ object AIP_CreateAppeal {
   //Go to Decision Type page
   val DecisionType =
 
-    group("AIP_280_DecisionType") {
+    group("AIP_270_DecisionType") {
 
-      exec(http("AIP_280_010_DecisionType")
+      exec(http("AIP_270_010_DecisionType")
         .get(BaseURL + "/decision-type")
         .headers(Headers.commonHeader)
         .check(CsrfCheck.save)
@@ -481,9 +485,9 @@ object AIP_CreateAppeal {
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
     //Appeal without a hearing
-    .group("AIP_290_SubmitDecisionType") {
+    .group("AIP_280_SubmitDecisionType") {
 
-      exec(http("AIP_290_010_SubmitDecisionType")
+      exec(http("AIP_280_010_SubmitDecisionType")
         .post(BaseURL + "/decision-type")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
@@ -497,9 +501,9 @@ object AIP_CreateAppeal {
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
     //Pay the appeal later - this leads to equality and diversity questions which are not included in the journey
-    .group("AIP_300_PayLater") {
+    .group("AIP_290_PayLater") {
 
-      exec(http("AIP_300_010_PayLater")
+      exec(http("AIP_290_010_PayLater")
         .post(BaseURL + "/pay-now")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
@@ -512,9 +516,9 @@ object AIP_CreateAppeal {
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
     //Return to the dashboard (bypass PCQ questions)
-    .group("AIP_310_ReturnToDashboard") {
+    .group("AIP_300_ReturnToDashboard") {
 
-      exec(http("AIP_310_010_ReturnToDashboard")
+      exec(http("AIP_300_010_ReturnToDashboard")
         .get(BaseURL + "/about-appeal")
         .headers(Headers.commonHeader)
         .check(substring("Tell us about your appeal"))
@@ -528,9 +532,9 @@ object AIP_CreateAppeal {
   //Support with fees
   val FeeSupport =
 
-    group("AIP_320_FeeSupport") {
+    group("AIP_310_FeeSupport") {
 
-      exec(http("AIP_320_010_FeeSupport")
+      exec(http("AIP_310_010_FeeSupport")
         .get(BaseURL + "/fee-support")
         .headers(Headers.commonHeader)
         .check(CsrfCheck.save)
@@ -541,9 +545,9 @@ object AIP_CreateAppeal {
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
     //Do not request support
-    .group("AIP_330_SubmitFeeSupport") {
+    .group("AIP_320_SubmitFeeSupport") {
 
-      exec(http("AIP_330_010_SubmitFeeSupport")
+      exec(http("AIP_320_010_SubmitFeeSupport")
         .post(BaseURL + "/fee-support")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
@@ -557,9 +561,9 @@ object AIP_CreateAppeal {
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
     //Pay for the appeal now
-    .group("AIP_340_HelpWithFees") {
+    .group("AIP_330_HelpWithFees") {
 
-      exec(http("AIP_340_010_HelpWithFees")
+      exec(http("AIP_330_010_HelpWithFees")
         .post(BaseURL + "/help-with-fees")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
@@ -576,9 +580,9 @@ object AIP_CreateAppeal {
   //Verifies the information entered is valid
   val CheckAndSend =
 
-    group("AIP_350_CheckAndSend") {
+    group("AIP_340_CheckAndSend") {
 
-      exec(http("AIP_350_010_CheckAndSend")
+      exec(http("AIP_340_010_CheckAndSend")
         .get(BaseURL + "/check-answers")
         .headers(Headers.commonHeader)
         .check(CsrfCheck.save)
@@ -590,9 +594,9 @@ object AIP_CreateAppeal {
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
     //Accepts the details are valid and submits the appeal
-    .group("AIP_360_CheckYourAnswers") {
+    .group("AIP_350_CheckYourAnswers") {
 
-      exec(http("AIP_360_010_CheckYourAnswers")
+      exec(http("AIP_350_010_CheckYourAnswers")
         .post(BaseURL + "/check-answers")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
@@ -607,9 +611,9 @@ object AIP_CreateAppeal {
   //User goes to the Appeal Overview page and gets the reference number for the appeal.
   val AppealOverview =
 
-    group("AIP_370_AppealOverview") {
+    group("AIP_360_AppealOverview") {
 
-      exec(http("AIP_370_010_AppealOverview")
+      exec(http("AIP_360_010_AppealOverview")
         .get(BaseURL + "/appeal-overview")
         .headers(Headers.commonHeader)
         .check(regex("""Appeal reference: ([a-zA-Z0-9/]+?)</p>""").saveAs("appealRef")))
@@ -621,9 +625,9 @@ object AIP_CreateAppeal {
   //Logout
   val AIPLogout =
 
-    group("AIP_380_Logout") {
+    group("AIP_370_Logout") {
 
-      exec(http("AIP_380_010_Logout")
+      exec(http("AIP_370_010_Logout")
         .get(BaseURL + "/logout")
         .headers(Headers.commonHeader)
         .check(substring("Appeal an immigration or asylum decision")))

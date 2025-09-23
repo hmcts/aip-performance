@@ -98,6 +98,11 @@ class Aip_Simulation extends Simulation {
       .exec(CcdHelper.addCaseEvent("#{cw-username}", "#{cw-password}", CcdCaseTypes.IA_Asylum, "#{caseId}", "requestHomeOfficeData", "bodies/CCD_requestHomeOfficeData.json"))
       .pause(1)
       .exec(CcdHelper.addCaseEvent("#{cw-username}", "#{cw-password}", CcdCaseTypes.IA_Asylum, "#{caseId}", "requestRespondentEvidence", "bodies/CCD_requestRespondentEvidence.json"))
+      .exec{
+        session =>
+          println(session)
+        session
+      }
     }
     .doIf("#{emailAddress.exists()}") {
       exec(DeleteUser.deleteUser)
