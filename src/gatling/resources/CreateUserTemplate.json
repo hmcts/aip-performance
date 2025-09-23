@@ -4,11 +4,8 @@
   "password": "#{password}",
   "roles": [
     {
-      "code": "citizen"
+      "code": "#{role}"
     }
   ],
-  "surname": "Test",
-  "userGroup": {
-    "code": "string"
-  }
+  "surname": "Test"
 }

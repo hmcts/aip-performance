@@ -1,0 +1,15 @@
+{
+  "_source": [
+    "reference",
+    "data.appealReferenceNumber"
+  ],
+  "query":{
+    "bool":{
+      "filter":{
+        "term":{
+          "data.appealReferenceNumber.keyword":"#{appealRef}"
+        }
+      }
+    }
+  }
+}
