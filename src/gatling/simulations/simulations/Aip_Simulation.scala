@@ -48,7 +48,7 @@ class Aip_Simulation extends Simulation {
   //If running in debug mode, disable pauses between steps
   val pauseOption:PauseType = debugMode match{
     case "off" => constantPauses
-    case _ => disabledPauses
+    case _ => customPauses(1000.toLong) //pause in debug otherwise the call to ES to retrieve the case number may not have been indexed in time
   }
 
   /* ******************************** */
@@ -58,9 +58,9 @@ class Aip_Simulation extends Simulation {
 
   val httpProtocol = http
     .baseUrl(BaseURL)
-    .doNotTrackHeader("1")
     .inferHtmlResources()
     .silentResources
+    .disableCaching //temporarily disabling cache, as Set-Cookie headers in the static resource responses is breaking the flow for multiple users
 
   before{
     println(s"Test Type: ${testType}")
@@ -89,10 +89,10 @@ class Aip_Simulation extends Simulation {
       //Caseworker requests Home Office Data then Requests Respondent Evidence
       .feed(CaseworkerFeeder)
       //Fetch the case by searching CCD by appealRef
-      .exec(CcdHelper.searchCases("#{cw-username}", "#{cw-password}", CcdCaseTypes.IA_Asylum, "bodies/CCD_searchCases.json",
+      .exec(CcdHelper.searchCases("#{cw-username}", "#{cw-password}", CcdCaseTypes.IA_Asylum, "bodies/CCD_searchCaseByAppealRef.json",
         additionalChecks = Seq(
-          jsonPath("$.cases[0].id").saveAs("caseId"),
-          jsonPath("$.cases[0].case_data.appealReferenceNumber").is("#{appealRef}")
+          jsonPath("$.cases[0].case_data.appealReferenceNumber").is("#{appealRef}"),
+          jsonPath("$.cases[0].id").saveAs("caseId")
         )))
       .pause(1)
       .exec(CcdHelper.addCaseEvent("#{cw-username}", "#{cw-password}", CcdCaseTypes.IA_Asylum, "#{caseId}", "requestHomeOfficeData", "bodies/CCD_requestHomeOfficeData.json"))

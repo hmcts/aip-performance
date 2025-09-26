@@ -94,11 +94,10 @@ object AIP_CreateAppeal {
     group("AIP_050_LoadLoginPage") {
 
       exec(http("AIP_050_010_LoadLoginPage")
-        .get(IdamURL + "/login?redirect_uri=https%3a%2f%2fimmigration-appeal.#{env}.platform.hmcts.net%2fredirectUrl&client_id=iac&state=#{state}&nonce=&scope=")
+        .get(IdamURL + "/login?redirect_uri=" + BaseURL + "%2fredirectUrl&client_id=iac&state=#{state}&nonce=&scope=")
         .headers(Headers.commonHeader)
-        .check(substring("Sign in or create an account"))
-
-        .check(CsrfCheck.save))
+        .check(CsrfCheck.save)
+        .check(substring("Sign in or create an account")))
 
     }
 
@@ -110,7 +109,7 @@ object AIP_CreateAppeal {
     group("AIP_060_Login") {
 
       exec(http("AIP_060_010_Login")
-        .post(IdamURL + "/login?redirect_uri=https%3a%2f%2fimmigration-appeal.#{env}.platform.hmcts.net%2fredirectUrl&client_id=iac&state=#{state}&nonce=&scope=")
+        .post(IdamURL + "/login?redirect_uri=" + BaseURL + "%2fredirectUrl&client_id=iac&state=#{state}&nonce=&scope=")
         .headers(Headers.commonHeader)
         .formParam("username", "#{emailAddress}")
         .formParam("password", "#{password}")
@@ -185,7 +184,6 @@ object AIP_CreateAppeal {
     }
 
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
-
 
   //User clicks on Home Office & gets Home Office Reference Number Page
   val HomeOfficeDetails =

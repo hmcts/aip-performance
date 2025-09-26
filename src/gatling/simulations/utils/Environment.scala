@@ -1,4 +1,4 @@
-package scenarios.utils
+package utils
 
 object Environment {
 

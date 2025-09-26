@@ -16,7 +16,7 @@ object CreateUser {
   ))
 
   //takes an userType e.g. petitioner/respondent, to create unique users for each user
-  def CreateCitizen = {
+  val CreateCitizen = {
     feed(newUserFeeder)
     .group("CreateCitizen") {
       exec(http("CreateCitizen")

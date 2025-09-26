@@ -1,4 +1,4 @@
-rootProject.name = 'AIP-performance'
+rootProject.name = 'aip-performance'
 
 include ':common-performance'
 
