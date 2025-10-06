@@ -5,7 +5,7 @@
     "homeOfficeSearchResponse": null,
     "homeOfficeApiError": "The Home office does not recognise the submitted appellant reference",
     "appellantFullName": "Perf Test IAC",
-    "appellantDateOfBirth": "1980-01-01",
+    "appellantDateOfBirth": "#{dobYear}-#{randomMonth}-#{randomDay}",
     "homeOfficeAppellantsList": {
       "value": {
         "code": "NoMatch",
@@ -24,6 +24,6 @@
     "summary": "",
     "description": ""
   },
-  "event_token": "#{event_token}",
+  "event_token": "#{eventToken}",
   "ignore_warning": false
 }

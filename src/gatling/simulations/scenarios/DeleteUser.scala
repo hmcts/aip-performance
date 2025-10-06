@@ -2,7 +2,7 @@ package scenarios
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
-import scenarios.utils.Environment
+import utils.Environment
 
 object DeleteUser {
 

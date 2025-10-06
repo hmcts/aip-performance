@@ -54,7 +54,7 @@ tasks.register("runSimulation", JavaExec) {
 
     // Add simulation class and results directory
     args += [
-            "-s", "simulations.AIPSimulation", // <---- SPECIFY YOUR SIMULATION HERE
+            "-s", "simulations.Aip_Simulation", // <---- SPECIFY YOUR SIMULATION HERE
             "-rf", layout.buildDirectory.get().asFile.toString() + "/reports/gatling"
     ]
 
@@ -83,8 +83,8 @@ configurations {
 
 /* Generate stats per transaction for use in Jenkins*/
 ext {
-    transactionNamesToGraph = ["AIP_010_Homepage", "AIP_280_CheckAnswers_POST",
-                               "AIP2_010_Homepage", "AIP2_110_SendDirection"] // set the transactions to graph here
+    transactionNamesToGraph = ["AIP_360_CheckYourAnswers", "AIP_370_AppealOverview",
+                               "CCD_SubmitEvent_requestHomeOfficeData", "CCD_SubmitEvent_requestRespondentEvidence"] // set the transactions to graph here
 }
 
 tasks.register('generateStats', JavaExec) {
