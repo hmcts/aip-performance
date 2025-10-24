@@ -83,7 +83,7 @@ configurations {
 
 /* Generate stats per transaction for use in Jenkins*/
 ext {
-    transactionNamesToGraph = ["AIP_360_CheckYourAnswers", "AIP_370_AppealOverview",
+    transactionNamesToGraph = ["AIP_340_CheckYourAnswers", "AIP_350_AppealOverview",
                                "CCD_SubmitEvent_requestHomeOfficeData", "CCD_SubmitEvent_requestRespondentEvidence"] // set the transactions to graph here
 }
 

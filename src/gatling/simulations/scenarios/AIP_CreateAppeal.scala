@@ -186,7 +186,7 @@ object AIP_CreateAppeal {
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
   //User clicks on Home Office & gets Home Office Reference Number Page
-  val HomeOfficeDetails =
+  val HomeOfficeAndPersonalDetails =
 
     group("AIP_110_HomeOfficeDetails") {
 
@@ -210,90 +210,6 @@ object AIP_CreateAppeal {
         .formParam("homeOfficeRefNumber", "123456789")
         .formParam("saveAndContinue", "")
         .check(CsrfCheck.save)
-        .check(substring("What date was your decision letter sent")))
-
-    }
-
-    .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
-
-    //Date Home Office Letter Sent this date has to be within the last 14 days
-    .group("AIP_130_DateLetterSent") {
-
-      exec(http("AIP_130_010_DateLetterSent")
-        .post(BaseURL + "/date-letter-sent")
-        .headers(Headers.commonHeader)
-        .formParam("_csrf", "#{csrf}")
-        .formParam("day", "#{randomDay}")
-        .formParam("month", "#{randomMonth}")
-        .formParam("year", "#{letterYear}")
-        .formParam("saveAndContinue", "")
-        .check(CsrfCheck.save)
-        .check(substring("Upload your Home Office decision letter")))
-
-    }
-
-    .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
-
-    //User uploads the decision letter
-    .group("AIP_140_UploadDecisionLetter") {
-
-      exec(http("AIP_140_010_UploadDecisionLetter")
-        .post(BaseURL + "/home-office-upload-decision-letter/upload?_csrf=#{csrf}")
-        .headers(Headers.commonHeader)
-        .header("content-type", "multipart/form-data")
-        .bodyPart(RawFileBodyPart("file-upload", "HORefusal.pdf")
-          .fileName("HORefusal.pdf")
-          .transferEncoding("binary"))
-        .asMultipartForm
-        .check(CsrfCheck.save)
-        .check(substring("HORefusal.pdf")))
-
-    }
-
-    .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
-
-    //Save the Decision letter file
-    .group("AIP_150_UploadDecisionLetterSubmit") {
-
-      exec(http("AIP_150_010_UploadDecisionLetterSubmit")
-        .post(BaseURL + "/home-office-upload-decision-letter")
-        .headers(Headers.commonHeader)
-        .formParam("_csrf", "#{csrf}")
-        .formParam("file-upload", "")
-        .formParam("saveAndContinue", "")
-        .check(CsrfCheck.save)
-        .check(substring("Has a deportation order been made against you")))
-
-    }
-
-    .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
-
-    //Has a deportation order been made against you? - No
-    .group("AIP_160_DeportationOrder") {
-
-      exec(http("AIP_160__010_DeportationOrder")
-        .post(BaseURL + "/deportation-order")
-        .headers(Headers.commonHeader)
-        .formParam("_csrf", "#{csrf}")
-        .formParam("answer", "No")
-        .formParam("saveAndContinue", "")
-        .check(substring("Tell us about your appeal"))
-        .check(regex("""(?s)title='Your Home Office details'[^<]*<\/a>.*?<strong class="govuk-tag[^"]*">\s*([^<]+?)\s*<\/strong>""").is("Saved")))
-
-    }
-
-    .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
-
-
-  //Select Enter Personal Details
-  val PersonalDetails =
-
-    group("AIP_170_PersonalDetails") {
-
-      exec(http("AIP_170_010_PersonalDetails")
-        .get(BaseURL + "/name")
-        .headers(Headers.commonHeader)
-        .check(CsrfCheck.save)
         .check(substring("What is your name")))
 
     }
@@ -301,9 +217,9 @@ object AIP_CreateAppeal {
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
     //Enter Name Details
-    .group("AIP_180_Name") {
+    .group("AIP_130_Name") {
 
-      exec(http("AIP_180_010_Name")
+      exec(http("AIP_130_010_Name")
         .post(BaseURL + "/name")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
@@ -318,9 +234,9 @@ object AIP_CreateAppeal {
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
     //Enter Date of Birth Details
-    .group("AIP_190_DateOfBirth") {
+    .group("AIP_140_DateOfBirth") {
 
-      exec(http("AIP_190_010_DateOfBirth")
+      exec(http("AIP_140_010_DateOfBirth")
         .post(BaseURL + "/date-birth")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
@@ -336,27 +252,126 @@ object AIP_CreateAppeal {
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
     //Enter Nationality
-    .group("AIP_200_Nationality") {
+    .group("AIP_150_Nationality") {
 
-      exec(http("AIP_200_010_Nationality")
+      exec(http("AIP_150_010_Nationality")
         .post(BaseURL + "/nationality")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
         .formParam("nationality", "AF")
         .formParam("saveAndContinue", "")
         .check(CsrfCheck.save)
-        .check(substring("What is your address")))
+        .check(substring("What date was your decision letter sent")))
 
     }
 
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
+    //Date Home Office Letter Sent this date has to be within the last 14 days
+    .group("AIP_160_DateLetterSent") {
+
+      exec(http("AIP_160_010_DateLetterSent")
+        .post(BaseURL + "/date-letter-sent")
+        .headers(Headers.commonHeader)
+        .formParam("_csrf", "#{csrf}")
+        .formParam("day", "#{randomDay}")
+        .formParam("month", "#{randomMonth}")
+        .formParam("year", "#{letterYear}")
+        .formParam("saveAndContinue", "")
+        .check(CsrfCheck.save)
+        .check(substring("Upload your Home Office decision letter")))
+
+    }
+
+    .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
+
+    //User uploads the decision letter
+    .group("AIP_170_UploadDecisionLetter") {
+
+      exec(http("AIP_170_010_UploadDecisionLetter")
+        .post(BaseURL + "/home-office-upload-decision-letter/upload?_csrf=#{csrf}")
+        .headers(Headers.commonHeader)
+        .header("content-type", "multipart/form-data")
+        .bodyPart(RawFileBodyPart("file-upload", "HORefusal.pdf")
+          .fileName("HORefusal.pdf")
+          .transferEncoding("binary"))
+        .asMultipartForm
+        .check(CsrfCheck.save)
+        .check(substring("HORefusal.pdf")))
+
+    }
+
+    .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
+
+    //Save the Decision letter file
+    .group("AIP_180_UploadDecisionLetterSubmit") {
+
+      exec(http("AIP_180_010_UploadDecisionLetterSubmit")
+        .post(BaseURL + "/home-office-upload-decision-letter")
+        .headers(Headers.commonHeader)
+        .formParam("_csrf", "#{csrf}")
+        .formParam("file-upload", "")
+        .formParam("saveAndContinue", "")
+        .check(CsrfCheck.save)
+        .check(substring("Has a deportation order been made against you")))
+
+    }
+
+    .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
+
+    //Has a deportation order been made against you? - No
+    .group("AIP_190_DeportationOrder") {
+
+      exec(http("AIP_190__010_DeportationOrder")
+        .post(BaseURL + "/deportation-order")
+        .headers(Headers.commonHeader)
+        .formParam("_csrf", "#{csrf}")
+        .formParam("answer", "No")
+        .formParam("saveAndContinue", "")
+        .check(substring("Tell us about your appeal"))
+        .check(regex("""(?s)title='Your Home Office and personal details'[^<]*<\/a>.*?<strong class="govuk-tag[^"]*">\s*([^<]+?)\s*<\/strong>""").is("Saved")))
+
+    }
+
+    .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
+
+  //Go to Your Contact Details page
+  val ContactDetails =
+
+    group("AIP_200_ContactDetails") {
+
+      exec(http("AIP_200_010_ContactDetails")
+        .get(BaseURL + "/contact-preferences")
+        .headers(Headers.commonHeader)
+        .check(CsrfCheck.save)
+        .check(substring("How do you want us to contact you")))
+
+    }
+
+    .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
+
+    //Enter contact preferences
+    .group("AIP_210_ContactPreferences") {
+
+      exec(http("AIP_210_010_ContactPreferences")
+        .post(BaseURL + "/contact-preferences")
+        .headers(Headers.commonHeader)
+        .formParam("_csrf", "#{csrf}")
+        .formParam("selections", "email")
+        .formParam("email-value", "#{emailAddress}")
+        .formParam("text-message-value", "")
+        .formParam("saveAndContinue", "")
+        .check(CsrfCheck.save)
+        .check(substring("What is your address")))
+
+    }
+
     .feed(postcodeFeeder)
 
     //Enter postcode and capture a random address from the returned list
-    .group("AIP_210_PostcodeLookup") {
+    .group("AIP_220_PostcodeLookup") {
 
-      exec(http("AIP_210_010_PostcodeLookup")
+      exec(http("AIP_220_010_PostcodeLookup")
         .post(BaseURL + "/address")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
@@ -371,9 +386,9 @@ object AIP_CreateAppeal {
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
     //Submit address chosen from the returned list
-    .group("AIP_220_SelectAddress") {
+    .group("AIP_230_SelectAddress") {
 
-      exec(http("AIP_220_010_SelectAddress")
+      exec(http("AIP_230_010_SelectAddress")
         .post(BaseURL + "/select-address")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
@@ -397,9 +412,9 @@ object AIP_CreateAppeal {
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
     //Confirm address
-    .group("AIP_230_ConfirmAddress") {
+    .group("AIP_240_ConfirmAddress") {
 
-      exec(http("AIP_230_010_ConfirmAddress")
+      exec(http("AIP_240_010_ConfirmAddress")
         .post(BaseURL + "/manual-address")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
@@ -409,40 +424,6 @@ object AIP_CreateAppeal {
         .formParam("address-county", "#{addressCounty}")
         .formParam("address-postcode", "#{addressPostcode}")
         .formParam("saveAndContinue", "")
-        .check(substring("Tell us about your appeal"))
-        .check(regex("""(?s)title='Your personal details'[^<]*<\/a>.*?<strong class="govuk-tag[^"]*">\s*([^<]+?)\s*<\/strong>""").is("Saved")))
-
-    }
-
-    .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
-
-  //Go to Your Contact Details page
-  val ContactDetails =
-
-    group("AIP_240_ContactDetails") {
-
-      exec(http("AIP_240_010_ContactDetails")
-        .get(BaseURL + "/contact-preferences")
-        .headers(Headers.commonHeader)
-        .check(CsrfCheck.save)
-        .check(substring("How do you want us to contact you")))
-
-    }
-
-    .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
-
-    //Enter contact preferences
-    .group("AIP_250_ContactPreferences") {
-
-      exec(http("AIP_250_010_ContactPreferences")
-        .post(BaseURL + "/contact-preferences")
-        .headers(Headers.commonHeader)
-        .formParam("_csrf", "#{csrf}")
-        .formParam("selections", "email")
-        .formParam("email-value", "#{emailAddress}")
-        .formParam("text-message-value", "")
-        .formParam("saveAndContinue", "")
-        .check(CsrfCheck.save)
         .check(substring("Do you have a sponsor")))
 
     }
@@ -450,9 +431,9 @@ object AIP_CreateAppeal {
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
     //Do you have a sponsor
-    .group("AIP_260_Sponsor") {
+    .group("AIP_250_Sponsor") {
 
-      exec(http("AIP_260_010_Sponsor")
+      exec(http("AIP_250_010_Sponsor")
         .post(BaseURL + "/has-sponsor")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
@@ -470,9 +451,9 @@ object AIP_CreateAppeal {
   //Go to Decision Type page
   val DecisionType =
 
-    group("AIP_270_DecisionType") {
+    group("AIP_260_DecisionType") {
 
-      exec(http("AIP_270_010_DecisionType")
+      exec(http("AIP_260_010_DecisionType")
         .get(BaseURL + "/decision-type")
         .headers(Headers.commonHeader)
         .check(CsrfCheck.save)
@@ -483,9 +464,9 @@ object AIP_CreateAppeal {
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
     //Appeal without a hearing
-    .group("AIP_280_SubmitDecisionType") {
+    .group("AIP_270_SubmitDecisionType") {
 
-      exec(http("AIP_280_010_SubmitDecisionType")
+      exec(http("AIP_270_010_SubmitDecisionType")
         .post(BaseURL + "/decision-type")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
@@ -499,9 +480,9 @@ object AIP_CreateAppeal {
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
     //Pay the appeal later - this leads to equality and diversity questions which are not included in the journey
-    .group("AIP_290_PayLater") {
+    .group("AIP_280_PayLater") {
 
-      exec(http("AIP_290_010_PayLater")
+      exec(http("AIP_280_010_PayLater")
         .post(BaseURL + "/pay-now")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
@@ -514,9 +495,9 @@ object AIP_CreateAppeal {
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
     //Return to the dashboard (bypass PCQ questions)
-    .group("AIP_300_ReturnToDashboard") {
+    .group("AIP_290_ReturnToDashboard") {
 
-      exec(http("AIP_300_010_ReturnToDashboard")
+      exec(http("AIP_290_010_ReturnToDashboard")
         .get(BaseURL + "/about-appeal")
         .headers(Headers.commonHeader)
         .check(substring("Tell us about your appeal"))
@@ -530,9 +511,9 @@ object AIP_CreateAppeal {
   //Support with fees
   val FeeSupport =
 
-    group("AIP_310_FeeSupport") {
+    group("AIP_300_FeeSupport") {
 
-      exec(http("AIP_310_010_FeeSupport")
+      exec(http("AIP_300_010_FeeSupport")
         .get(BaseURL + "/fee-support")
         .headers(Headers.commonHeader)
         .check(CsrfCheck.save)
@@ -543,9 +524,9 @@ object AIP_CreateAppeal {
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
     //Do not request support
-    .group("AIP_320_SubmitFeeSupport") {
+    .group("AIP_310_SubmitFeeSupport") {
 
-      exec(http("AIP_320_010_SubmitFeeSupport")
+      exec(http("AIP_310_010_SubmitFeeSupport")
         .post(BaseURL + "/fee-support")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
@@ -559,9 +540,9 @@ object AIP_CreateAppeal {
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
     //Pay for the appeal now
-    .group("AIP_330_HelpWithFees") {
+    .group("AIP_320_HelpWithFees") {
 
-      exec(http("AIP_330_010_HelpWithFees")
+      exec(http("AIP_320_010_HelpWithFees")
         .post(BaseURL + "/help-with-fees")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
@@ -578,9 +559,9 @@ object AIP_CreateAppeal {
   //Verifies the information entered is valid
   val CheckAndSend =
 
-    group("AIP_340_CheckAndSend") {
+    group("AIP_330_CheckAndSend") {
 
-      exec(http("AIP_340_010_CheckAndSend")
+      exec(http("AIP_330_010_CheckAndSend")
         .get(BaseURL + "/check-answers")
         .headers(Headers.commonHeader)
         .check(CsrfCheck.save)
@@ -592,9 +573,9 @@ object AIP_CreateAppeal {
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
     //Accepts the details are valid and submits the appeal
-    .group("AIP_350_CheckYourAnswers") {
+    .group("AIP_340_CheckYourAnswers") {
 
-      exec(http("AIP_350_010_CheckYourAnswers")
+      exec(http("AIP_340_010_CheckYourAnswers")
         .post(BaseURL + "/check-answers")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
@@ -609,9 +590,9 @@ object AIP_CreateAppeal {
   //User goes to the Appeal Overview page and gets the reference number for the appeal.
   val AppealOverview =
 
-    group("AIP_360_AppealOverview") {
+    group("AIP_350_AppealOverview") {
 
-      exec(http("AIP_360_010_AppealOverview")
+      exec(http("AIP_350_010_AppealOverview")
         .get(BaseURL + "/appeal-overview")
         .headers(Headers.commonHeader)
         .check(regex("""Appeal reference: ([a-zA-Z0-9/]+?)</p>""").saveAs("appealRef")))
@@ -623,9 +604,9 @@ object AIP_CreateAppeal {
   //Logout
   val AIPLogout =
 
-    group("AIP_370_Logout") {
+    group("AIP_360_Logout") {
 
-      exec(http("AIP_370_010_Logout")
+      exec(http("AIP_360_010_Logout")
         .get(BaseURL + "/logout")
         .headers(Headers.commonHeader)
         .check(substring("Appeal an immigration or asylum decision")))
