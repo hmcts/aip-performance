@@ -60,6 +60,7 @@ class Aip_Simulation extends Simulation {
     .baseUrl(BaseURL)
     .inferHtmlResources()
     .silentResources
+    .disableCaching //temporarily disabling cache, as Set-Cookie headers in the static resource responses is breaking the flow for multiple users
 
   before{
     println(s"Test Type: ${testType}")
