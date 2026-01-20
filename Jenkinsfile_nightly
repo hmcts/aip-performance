@@ -8,7 +8,7 @@ properties([
         ])
 ])
 
-@Library("Infrastructure")
+@Library('Infrastructure@aip-test') _
 
 def product = "ia"
 def component = "aip-frontend"
