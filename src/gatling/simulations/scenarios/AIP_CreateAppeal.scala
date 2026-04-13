@@ -115,6 +115,11 @@ object AIP_CreateAppeal {
         .formParam("password", "#{password}")
         .formParam("selfRegistrationEnabled", "true")
         .formParam("_csrf", "#{csrf}")
+        .check(substring("Your appeal")))
+
+      .exec(http("AIP_065_010_CreateAppeal")
+        .get(BaseURL + "/create-new-appeal?Create+new+appeal=")
+        .headers(Headers.commonHeader)
         .check(substring("Your appeal details")))
 
       }
