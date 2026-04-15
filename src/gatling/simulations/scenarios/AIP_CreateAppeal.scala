@@ -115,19 +115,46 @@ object AIP_CreateAppeal {
         .formParam("password", "#{password}")
         .formParam("selfRegistrationEnabled", "true")
         .formParam("_csrf", "#{csrf}")
-        .check(substring("Your appeal")))
-
-      .exec(http("AIP_065_010_CreateAppeal")
-        .get(BaseURL + "/create-new-appeal?Create+new+appeal=")
-        .headers(Headers.commonHeader)
         .check(substring("Your appeal details")))
 
       }
 
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
+  //Login with an IAC Citizen account, the user sees their dashboard
+  val LoginDashboard =
 
-  //User gets the About Appeal Page after they have logged in
+    group("AIP_060_LoginDashboard") {
+
+      exec(http("AIP_060_010_LoginDashboard")
+        .post(IdamURL + "/login?redirect_uri=" + BaseURL + "%2fredirectUrl&client_id=iac&state=#{state}&nonce=&scope=")
+        .headers(Headers.commonHeader)
+        .formParam("username", "#{emailAddress}")
+        .formParam("password", "#{password}")
+        .formParam("selfRegistrationEnabled", "true")
+        .formParam("_csrf", "#{csrf}")
+        .check(substring("Your appeals")))
+
+    }
+
+    .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
+
+  //The user starts an appeal
+  val CreateAppeal =
+
+    group("AIP_065_CreateAppeal") {
+
+      exec(http("AIP_065_010_CreateAppeal")
+        .get(BaseURL + "/create-new-appeal?Create+new+appeal=")
+        .headers(Headers.commonHeader)
+        .check(substring("Your appeal details")))
+
+    }
+
+    .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
+
+
+  //User gets the About Appeal Page after they have created their appeal
   val AboutAppeal =
 
     group("AIP_070_AboutAppeal") {
@@ -601,6 +628,33 @@ object AIP_CreateAppeal {
         .get(BaseURL + "/appeal-overview")
         .headers(Headers.commonHeader)
         .check(regex("""Appeal reference: ([a-zA-Z0-9/]+?)</p>""").saveAs("appealRef")))
+
+    }
+
+    .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
+
+  //The user can view a specific appeal from the multiple appeals dashboard
+  val ViewAppeal =
+    group("AIP_353_ViewAppeal") {
+
+      exec(http("AIP_357_010_AppealOverview")
+        .get(BaseURL + "/appeal-overview?caseId=#{appealRef}")
+        .headers(Headers.commonHeader)
+        .check(substring("Your appeal details")))
+
+    }
+
+      .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
+
+  //Used to delete an appeal in draft, cannot be used to delete a submitted appeal
+  val DeleteDraftAppeal =
+
+    group("AIP_357_DeleteDraftAppeal") {
+
+      exec(http("AIP_357_010_DeleteAppeal")
+        .get(BaseURL + "/delete-draft-appeal/#{appealRef}?Delete+draft+appeal=")
+        .headers(Headers.commonHeader)
+        .check(substring("Your appeals")))
 
     }
 
