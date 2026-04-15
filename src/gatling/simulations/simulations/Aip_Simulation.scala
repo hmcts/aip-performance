@@ -42,7 +42,7 @@ class Aip_Simulation extends Simulation {
   val testDurationMins = 60
 
   //Must be doubles to ensure the calculations result in doubles not rounded integers
-  val aipHourlyTarget:Double = 100
+  val aipHourlyTarget:Double = 50
   val aipRatePerSec = aipHourlyTarget / 3600
 
   //If running in debug mode, disable pauses between steps
@@ -74,7 +74,8 @@ class Aip_Simulation extends Simulation {
       .exec(AIP_CreateAppeal.Homepage)
       .exec(AIP_CreateAppeal.Eligibility)
       .exec(AIP_CreateAppeal.LoginLandingPage)
-      .exec(AIP_CreateAppeal.Login)
+      .exec(AIP_CreateAppeal.LoginDashboard)
+      .exec(AIP_CreateAppeal.CreateAppeal)
       .exec(AIP_CreateAppeal.AboutAppeal)
       .exec(AIP_CreateAppeal.TypeOfAppeal)
       .exec(AIP_CreateAppeal.HomeOfficeAndPersonalDetails)
