@@ -633,18 +633,32 @@ object AIP_CreateAppeal {
 
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
+  //The user returns to their dashboard from the appeal page, the draft appeal's reference is saved
+  val BackToYourAppeals =
+    group("AIP_351_BackToYourAppeals") {
+
+      exec(http("AIP_351_010_BackToYourAppeals")
+        .get(BaseURL + "/cases-list")
+        .headers(Headers.commonHeader)
+        .check(substring("Your appeals"))
+        .check(regex("""<a id="delete-([a-zA-Z0-9/]+?)" href='#' class="govuk-link delete-draft-appeal"""").optional.saveAs("draftAppealRef")))
+
+    }
+
+    .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
+
   //The user can view a specific appeal from the multiple appeals dashboard
   val ViewAppeal =
-    group("AIP_353_ViewAppeal") {
+    group("AIP_355_ViewAppeal") {
 
-      exec(http("AIP_357_010_AppealOverview")
-        .get(BaseURL + "/appeal-overview?caseId=#{appealRef}")
+      exec(http("AIP_355_010_AppealOverview")
+        .get(BaseURL + "/appeal-overview?caseId=#{draftAppealRef}")
         .headers(Headers.commonHeader)
         .check(substring("Your appeal details")))
 
     }
 
-      .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
+    .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
   //Used to delete an appeal in draft, cannot be used to delete a submitted appeal
   val DeleteDraftAppeal =
@@ -652,7 +666,7 @@ object AIP_CreateAppeal {
     group("AIP_357_DeleteDraftAppeal") {
 
       exec(http("AIP_357_010_DeleteAppeal")
-        .get(BaseURL + "/delete-draft-appeal/#{appealRef}?Delete+draft+appeal=")
+        .get(BaseURL + "/delete-draft-appeal/#{draftAppealRef}?Delete+draft+appeal=")
         .headers(Headers.commonHeader)
         .check(substring("Your appeals")))
 
