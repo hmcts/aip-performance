@@ -84,6 +84,12 @@ class Aip_Simulation extends Simulation {
       .exec(AIP_CreateAppeal.FeeSupport)
       .exec(AIP_CreateAppeal.CheckAndSend)
       .exec(AIP_CreateAppeal.AppealOverview)
+      //a second appeal is created but only to be deleted shortly after
+      .exec(AIP_CreateAppeal.CreateAppeal)
+      .exec(AIP_CreateAppeal.AboutAppeal)
+      .exec(AIP_CreateAppeal.BackToYourAppeals)
+      .exec(AIP_CreateAppeal.ViewAppeal)
+      .exec(AIP_CreateAppeal.DeleteDraftAppeal)
       .exec(AIP_CreateAppeal.AIPLogout)
       //Caseworker requests Home Office Data then Requests Respondent Evidence
       .feed(CaseworkerFeeder)
