@@ -112,7 +112,8 @@ class Aip_Simulation extends Simulation {
       .exec(AIP_CreateAppeal.Homepage)
       .exec(AIP_CreateAppeal.Eligibility)
       .exec(AIP_CreateAppeal.LoginLandingPage)
-      .exec(AIP_CreateAppeal.Login)
+      .exec(AIP_CreateAppeal.LoginDashboard)
+      .exec(AIP_CreateAppeal.CreateAppeal)
       .exec(AIP_CreateAppeal.AboutAppeal)
       .exec(AIP_CreateAppeal.TypeOfAppeal)
       .exec(AIP_CreateAppeal.HomeOfficeAndPersonalDetails)
@@ -121,7 +122,6 @@ class Aip_Simulation extends Simulation {
       .exec(AIP_CreateAppeal.FeeSupport)
       .exec(AIP_CreateAppeal.CheckAndSend)
       .exec(AIP_CreateAppeal.AppealOverview)
-      .exec(AIP_CreateAppeal.AIPLogout)
       //a second appeal is created but only to be deleted shortly after
       .exec(AIP_CreateAppeal.CreateAppeal)
       .exec(AIP_CreateAppeal.AboutAppeal)
@@ -144,11 +144,12 @@ class Aip_Simulation extends Simulation {
       .exec{
         session =>
           println(session)
-          session
+        session
       }
     }
     .doIf("#{emailAddress.exists()}") {
       exec(DeleteUser.deleteUser)
+    }
 
   //defines the Gatling simulation model, based on the inputs
   def simulationProfile(simulationType: String, userPerSecRate: Double, numberOfPipelineUsers: Double): Seq[OpenInjectionStep] = {
