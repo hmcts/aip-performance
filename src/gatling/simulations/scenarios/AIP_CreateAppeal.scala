@@ -39,7 +39,7 @@ object AIP_CreateAppeal {
     .group ("AIP_010_Homepage") {
 
       exec(http("AIP_010_Homepage")
-        .get(BaseURL + "/")
+        .get(BaseURL + "/start-appeal")
         .headers(Headers.commonHeader)
         .check(substring("Appeal an immigration or asylum decision")))
 
@@ -103,26 +103,8 @@ object AIP_CreateAppeal {
 
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
-  //Login into Application with an IAC Citizen account
+  //Login into Application with an IAC Citizen account, the user sees their dashboard
   val Login =
-
-    group("AIP_060_Login") {
-
-      exec(http("AIP_060_010_Login")
-        .post(IdamURL + "/login?redirect_uri=" + BaseURL + "%2fredirectUrl&client_id=iac&state=#{state}&nonce=&scope=")
-        .headers(Headers.commonHeader)
-        .formParam("username", "#{emailAddress}")
-        .formParam("password", "#{password}")
-        .formParam("selfRegistrationEnabled", "true")
-        .formParam("_csrf", "#{csrf}")
-        .check(substring("Your appeal details")))
-
-      }
-
-    .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
-
-  //Login with an IAC Citizen account, the user sees their dashboard
-  val LoginDashboard =
 
     group("AIP_060_LoginDashboard") {
 
