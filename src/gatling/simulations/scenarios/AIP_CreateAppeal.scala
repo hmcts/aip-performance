@@ -115,7 +115,7 @@ object AIP_CreateAppeal {
         .formParam("password", "#{password}")
         .formParam("selfRegistrationEnabled", "true")
         .formParam("_csrf", "#{csrf}")
-        .check(substring("Your appeals")))
+        .check(substring("Appeal list")))
 
     }
 
@@ -444,16 +444,16 @@ object AIP_CreateAppeal {
 
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
-    //Do you have a sponsor
+    //Do you have a sponsor or non-legal representative - No
     .group("AIP_250_Sponsor") {
 
       exec(http("AIP_250_010_Sponsor")
-        .post(BaseURL + "/has-sponsor")
+        .post(BaseURL + "/has-sponsor-or-non-legal-rep")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
-        .formParam("questionId", "")
-        .formParam("answer", "No")
-        .formParam("continue", "")
+        .formParam("hasSponsor", "No")
+        .formParam("hasNonLegalRep", "No")
+        .formParam("saveAndContinue", "")
         .check(substring("Tell us about your appeal"))
         .check(regex("""(?s)title='Your contact details'[^<]*<\/a>.*?<strong class="govuk-tag[^"]*">\s*([^<]+?)\s*<\/strong>""").is("Saved")))
 
