@@ -444,7 +444,7 @@ object AIP_CreateAppeal {
 
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
-    //Do you have a sponsor or non-legal representative - No
+    //Do you have a sponsor or non-legal representative - No sponsor, yes NLR
     .group("AIP_250_Sponsor") {
 
       exec(http("AIP_250_010_Sponsor")
@@ -452,7 +452,54 @@ object AIP_CreateAppeal {
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
         .formParam("hasSponsor", "No")
-        .formParam("hasNonLegalRep", "No")
+        .formParam("hasNonLegalRep", "Yes")
+        .formParam("saveAndContinue", "")
+        .check(substring("What is your non-legal representative&#39;s name")))
+
+    }
+
+    .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
+
+    //Enter NLR's name
+    .group("AIP_251_NLRName") {
+
+      exec(http("AIP_251_010_NLRName")
+        .post(BaseURL + "/non-legal-rep-name")
+        .headers(Headers.commonHeader)
+        .formParam("_csrf", "#{csrf}")
+        .formParam("nlrGivenNames", "NLR Given")
+        .formParam("nlrFamilyName", "NLR Family")
+        .formParam("saveAndContinue", "")
+        .check(substring("What is your non-legal representative&#39;s address")))
+
+    }
+
+    .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
+
+    //Enter NLR's address
+    .group("AIP_252_NLRAddress") {
+
+      exec(http("AIP_252_010_NLRAddress")
+        .post(BaseURL + "/non-legal-rep-address")
+        .headers(Headers.commonHeader)
+        .formParam("_csrf", "#{csrf}")
+        .formParam("nlr-address", "Test Address")
+        .formParam("saveAndContinue", "")
+        .check(substring("What are your non-legal representative&#39;s contact details?")))
+
+    }
+
+    .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
+
+    //Enter NLR's contact details
+    .group("AIP_253_NLRContactDetails") {
+
+      exec(http("AIP_253_010_NLRContactDetails")
+        .post(BaseURL + "/non-legal-rep-contact-details")
+        .headers(Headers.commonHeader)
+        .formParam("_csrf", "#{csrf}")
+        .formParam("emailAddress", "nlr-#{emailAddress}")
+        .formParam("phoneNumber", "07777777777")
         .formParam("saveAndContinue", "")
         .check(substring("Tell us about your appeal"))
         .check(regex("""(?s)title='Your contact details'[^<]*<\/a>.*?<strong class="govuk-tag[^"]*">\s*([^<]+?)\s*<\/strong>""").is("Saved")))

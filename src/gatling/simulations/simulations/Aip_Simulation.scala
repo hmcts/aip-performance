@@ -42,7 +42,7 @@ class Aip_Simulation extends Simulation {
   val testDurationMins = 60
 
   //Must be doubles to ensure the calculations result in doubles not rounded integers
-  val aipHourlyTarget:Double = 50
+  val aipHourlyTarget:Double = 75
   val aipRatePerSec = aipHourlyTarget / 3600
 
   //If running in debug mode, disable pauses between steps
