@@ -39,7 +39,7 @@ class Aip_Simulation extends Simulation {
   /* PERFORMANCE TEST CONFIGURATION */
   val rampUpDurationMins = 5
   val rampDownDurationMins = 5
-  val testDurationMins = 60
+  val testDurationMins = 45
 
   //Must be doubles to ensure the calculations result in doubles not rounded integers
   val aipHourlyTarget:Double = 75
