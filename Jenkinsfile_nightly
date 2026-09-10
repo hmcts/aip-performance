@@ -29,7 +29,7 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
 }
 
 withNightlyPipeline("java", product, component) {
-    loadVaultSecretes(secrets)
+    loadVaultSecrets(secrets)
 
     afterAlways('checkout') {
         sh """git submodule update --init --recursive --remote"""
