@@ -221,7 +221,7 @@ object AIP_CreateAppeal {
         .post(BaseURL + "/home-office-reference-number")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
-        .formParam("homeOfficeRefNumber", "123456789")
+        .formParam("homeOfficeRefNumber", "098765432")
         .formParam("saveAndContinue", "")
         .check(CsrfCheck.save)
         .check(substring("What is your name")))
