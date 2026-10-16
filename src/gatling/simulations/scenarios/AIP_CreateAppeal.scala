@@ -194,6 +194,7 @@ object AIP_CreateAppeal {
         .formParam("saveAndContinue", "")
         .check(substring("Tell us about your appeal"))
         .check(regex("""(?s)Appeal type[^<]*<\/a>.*?<strong class="govuk-tag[^"]*".*?>\s*([^<]+?)\s*<\/strong>""").is("Saved")))
+
     }
 
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
@@ -343,6 +344,7 @@ object AIP_CreateAppeal {
         .formParam("saveAndContinue", "")
         .check(substring("Tell us about your appeal"))
         .check(regex("""(?s)Your Home Office and personal details[^<]*<\/a>.*?<strong class="govuk-tag[^"]*".*?'>\s*([^<]+?)\s*<\/strong>""").is("Saved")))
+
     }
 
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
@@ -513,8 +515,7 @@ object AIP_CreateAppeal {
         .get(BaseURL + "/about-appeal")
         .headers(Headers.commonHeader)
         .check(substring("Tell us about your appeal"))
-        .check(regex(
-          """(?s)Decision with or without a hearing[^<]*<\/a>.*?<strong class="govuk-tag[^"]*".*?>\s*([^<]+?)\s*<\/strong>""".stripMargin).is("Saved")))
+        .check(regex("""(?s)Decision with or without a hearing[^<]*<\/a>.*?<strong class="govuk-tag[^"]*".*?>\s*([^<]+?)\s*<\/strong>""".stripMargin).is("Saved")))
 
     }
 
