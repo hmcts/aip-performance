@@ -193,8 +193,7 @@ object AIP_CreateAppeal {
         .formParam("appealType", "protection")
         .formParam("saveAndContinue", "")
         .check(substring("Tell us about your appeal"))
-        .check(regex("""(?s)title='Appeal type'[^<]*<\/a>.*?<strong class="govuk-tag[^"]*">\s*([^<]+?)\s*<\/strong>""").is("Saved")))
-
+        .check(regex("""(?s)Appeal type[^<]*<\/a>.*?<strong class="govuk-tag[^"]*".*?>\s*([^<]+?)\s*<\/strong>""").is("Saved")))
     }
 
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
@@ -343,8 +342,7 @@ object AIP_CreateAppeal {
         .formParam("answer", "No")
         .formParam("saveAndContinue", "")
         .check(substring("Tell us about your appeal"))
-        .check(regex("""(?s)title='Your Home Office and personal details'[^<]*<\/a>.*?<strong class="govuk-tag[^"]*">\s*([^<]+?)\s*<\/strong>""").is("Saved")))
-
+        .check(regex("""(?s)Your Home Office and personal details[^<]*<\/a>.*?<strong class="govuk-tag[^"]*".*?'>\s*([^<]+?)\s*<\/strong>""").is("Saved")))
     }
 
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
@@ -455,7 +453,7 @@ object AIP_CreateAppeal {
         .formParam("hasNonLegalRep", "No")
         .formParam("saveAndContinue", "")
         .check(substring("Tell us about your appeal"))
-        .check(regex("""(?s)title='Your contact details'[^<]*<\/a>.*?<strong class="govuk-tag[^"]*">\s*([^<]+?)\s*<\/strong>""").is("Saved")))
+        .check(regex("""(?s)Your contact details[^<]*<\/a>.*?<strong class="govuk-tag[^"]*".*?>\s*([^<]+?)\s*<\/strong>""").is("Saved")))
 
     }
 
@@ -515,7 +513,8 @@ object AIP_CreateAppeal {
         .get(BaseURL + "/about-appeal")
         .headers(Headers.commonHeader)
         .check(substring("Tell us about your appeal"))
-        .check(regex("""(?s)title='Decision with or without a hearing'[^<]*<\/a>.*?<strong class="govuk-tag[^"]*">\s*([^<]+?)\s*<\/strong>""").is("Saved")))
+        .check(regex(
+          """(?s)Decision with or without a hearing[^<]*<\/a>.*?<strong class="govuk-tag[^"]*".*?>\s*([^<]+?)\s*<\/strong>""".stripMargin).is("Saved")))
 
     }
 
@@ -563,7 +562,7 @@ object AIP_CreateAppeal {
         .formParam("answer", "willPayForAppeal")
         .formParam("saveAndContinue", "")
         .check(substring("Tell us about your appeal"))
-        .check(regex("""(?s)title='Support to pay the fee'[^<]*<\/a>.*?<strong class="govuk-tag[^"]*">\s*([^<]+?)\s*<\/strong>""").is("Saved")))
+        .check(regex("""(?s)Support to pay the fee[^<]*<\/a>.*?<strong class="govuk-tag[^"]*".*?>\s*([^<]+?)\s*<\/strong>""").is("Saved")))
 
     }
 
