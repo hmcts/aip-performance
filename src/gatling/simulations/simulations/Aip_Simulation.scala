@@ -73,7 +73,7 @@ class Aip_Simulation extends Simulation {
       .exec(CreateUser.CreateCitizen)
       .exec(AIP_CreateAppeal.Homepage)
       .exec(AIP_CreateAppeal.Eligibility)
-      .exec(AIP_CreateAppeal.LoginLandingPage)
+      .exec(AIP_CreateAppeal.Login)
       .exec(AIP_CreateAppeal.Login)
       .exec(AIP_CreateAppeal.CreateAppeal)
       .exec(AIP_CreateAppeal.AboutAppeal)
