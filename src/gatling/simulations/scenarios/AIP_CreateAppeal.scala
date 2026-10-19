@@ -81,22 +81,6 @@ object AIP_CreateAppeal {
       exec(http("AIP_040_010_ContinueToAppeal")
         .get(BaseURL + "/login?register=true")
         .headers(Headers.commonHeader)
-        .check(regex("client_id=iac&state=([0-9a-z-]+?)&nonce").saveAs("state"))
-        .check(substring("Create an account or sign in")))
-
-    }
-
-    .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
-
-  //Sign in to continue with your appeal
-  val LoginLandingPage =
-
-    group("AIP_050_LoadLoginPage") {
-
-      exec(http("AIP_050_010_LoadLoginPage")
-        .get(IdamURL + "/login?redirect_uri=" + BaseURL + "%2fredirectUrl&client_id=iac&state=#{state}&nonce=&scope=")
-        .headers(Headers.commonHeader)
-        .check(CsrfCheck.save)
         .check(substring("Sign in or create an account")))
 
     }
@@ -104,18 +88,48 @@ object AIP_CreateAppeal {
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
   //Login into Application with an IAC Citizen account, the user sees their dashboard
+  //The application currently (10/2026) has a bug where login has to be run through
+  //twice, as the first password submission redirects to the login start
   val Login =
 
-    group("AIP_060_LoginDashboard") {
-
-      exec(http("AIP_060_010_LoginDashboard")
-        .post(IdamURL + "/login?redirect_uri=" + BaseURL + "%2fredirectUrl&client_id=iac&state=#{state}&nonce=&scope=")
+    //Sign in
+    group("AIP_050_010_Login") {
+      exec(http("AIP_050_010_Login")
+        .get(IdamURL + "/enter-email")
         .headers(Headers.commonHeader)
-        .formParam("username", "#{emailAddress}")
-        .formParam("password", "#{password}")
-        .formParam("selfRegistrationEnabled", "true")
+        .check(CsrfCheck.save)
+        .check(substring("Enter your email address")))
+
+    }
+
+    .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
+
+    //Enter email
+    .group("AIP_050_020_Login_EnterEmail") {
+      exec(http("AIP_050_020_LoginEmail")
+        .post(IdamURL + "/enter-email")
+        .headers(Headers.commonHeader)
+        .header("content-type", "application/x-www-form-urlencoded")
+        .formParam("email", "#{emailAddress}")
         .formParam("_csrf", "#{csrf}")
-        .check(substring("Appeal list")))
+        .check(CsrfCheck.save)
+        .check(substring("Enter your password")))
+
+    }
+
+    .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
+
+    //Enter password
+    .group("AIP_050_030_Login_EnterPassword") {
+      exec(http("AIP_050_030_LoginPassword")
+        .post(IdamURL + "/enter-password")
+        .headers(Headers.commonHeader)
+        .header("content-type", "application/x-www-form-urlencoded")
+        .formParam("action", "_submit")
+        .formParam("email", "#{emailAddress}")
+        .formParam("password", "#{password}")
+        .formParam("_csrf", "#{csrf}")
+        .check(regex("Sign in or create an account|Appeal list")))
 
     }
 
@@ -124,9 +138,9 @@ object AIP_CreateAppeal {
   //The user starts an appeal
   val CreateAppeal =
 
-    group("AIP_065_CreateAppeal") {
+    group("AIP_060_CreateAppeal") {
 
-      exec(http("AIP_065_010_CreateAppeal")
+      exec(http("AIP_060_010_CreateAppeal")
         .get(BaseURL + "/create-new-appeal?Create+new+appeal=")
         .headers(Headers.commonHeader)
         .check(substring("Your appeal details")))
