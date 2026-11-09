@@ -3,7 +3,7 @@ package scenarios
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
-import utilities.DateUtils
+import utilities.{AzureKeyVault, DateUtils}
 import utils.{CsrfCheck, Environment, Headers}
 
 import scala.concurrent.duration._
@@ -16,24 +16,49 @@ object AIP_CreateAppeal {
 
   val BaseURL = Environment.baseURL
   val IdamURL = Environment.idamURL
+  val MicrosoftURL = Environment.microsoftURL
+  val ApiGatewayURL = Environment.apiGatewayURL
 
   val MinThinkTime = Environment.minThinkTime
   val MaxThinkTime = Environment.maxThinkTime
 
+  val caseDetailsHomeOfficeFeeder = csv("CaseDetailsHomeOffice.csv").random
+  val caseDetailsMockFeeder = csv("CaseDetailsMock.csv").random
   val postcodeFeeder = csv("postcodes.csv").random
+
+  val USE_MOCK = true //true to use Mock, false to use Home Office integration (needs to match flux config)
+
+  val env = System.getProperty("env", "perftest")
+
+  //Fetch Home Office Integration values from the Keyvault
+  val vaultAppId = AzureKeyVault.loadClientSecret(s"ia-$env", "apim-ia-home-office-app-id", "IA_HO_APP_ID")
+  val vaultClientId = AzureKeyVault.loadClientSecret(s"ia-$env", "apim-ia-home-office-client-id", "IA_HO_CLIENT_ID")
+  val vaultTenantId = AzureKeyVault.loadClientSecret(s"ia-$env", "apim-ia-home-office-tenant-id", "IA_HO_TENANT_ID")
+  val vaultClientSecret = AzureKeyVault.loadClientSecret(s"ia-$env", "apim-ia-homeoffice-client-secret", "IA_HO_CLIENT_SECRET")
+  val vaultGrantType = AzureKeyVault.loadClientSecret(s"ia-$env", "apim-ia-homeoffice-grant-type", "IA_HO_GRANT_TYPE")
+
 
   //AIP Start Appeal HomePage
   val Homepage =
 
-    exec(flushHttpCache)
+    (if (USE_MOCK){
+      println("Using Home Office Mock. To switch to Home Office, update flux and amend USE_MOCK in the scenario")
+      feed(caseDetailsMockFeeder)
+    }
+    else {
+      println("Using Home Office Service. To switch to Mock, update flux and amend USE_MOCK in the scenario")
+      feed(caseDetailsHomeOfficeFeeder)
+    })
+
+    .exec(flushHttpCache)
     .exec(flushCookieJar)
     .exec(_.setAll(
       //Home office letter should have been received within the last 14 days
-      "randomDay" -> DateUtils.getDatePast("dd", days = 10),
-      "randomMonth" -> DateUtils.getDatePast("MM", days = 10),
+      "letterDay" -> DateUtils.getDatePast("dd", days = 10),
+      "letterMonth" -> DateUtils.getDatePast("MM", days = 10),
       "letterYear" -> DateUtils.getDatePast("yyyy", days = 10),
-      "dobYear" -> DateUtils.getDatePastRandom("yyyy", minYears = 20, maxYears = 50),
-      "deadlineDate" -> DateUtils.getDateFuture("yyyy-MM-dd", days = 14)
+      "deadlineDate" -> DateUtils.getDateFuture("yyyy-MM-dd", days = 14),
+      "dateTimeNow" -> DateUtils.getDateNow("yyyy-MM-dd'T'HH:mm:ss'+00:00'")
     ))
 
     .group ("AIP_010_Homepage") {
@@ -129,6 +154,7 @@ object AIP_CreateAppeal {
         .formParam("email", "#{emailAddress}")
         .formParam("password", "#{password}")
         .formParam("_csrf", "#{csrf}")
+        .check(CsrfCheck.save(optional = true))
         .check(regex("Sign in or create an account|Appeal list")))
 
     }
@@ -141,8 +167,10 @@ object AIP_CreateAppeal {
     group("AIP_060_CreateAppeal") {
 
       exec(http("AIP_060_010_CreateAppeal")
-        .get(BaseURL + "/create-new-appeal?Create+new+appeal=")
+        .post(BaseURL + "/create-new-appeal")
         .headers(Headers.commonHeader)
+        .formParam("_csrf", "#{csrf}")
+        .formParam("Create new appeal", "")
         .check(substring("Your appeal details")))
 
     }
@@ -235,7 +263,7 @@ object AIP_CreateAppeal {
         .post(BaseURL + "/home-office-reference-number")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
-        .formParam("homeOfficeRefNumber", "098765432")
+        .formParam("homeOfficeRefNumber", "#{homeOfficeRefNumber}")
         .formParam("saveAndContinue", "")
         .check(CsrfCheck.save)
         .check(substring("What is your name")))
@@ -251,25 +279,26 @@ object AIP_CreateAppeal {
         .post(BaseURL + "/name")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
-        .formParam("givenNames", "Perf Test")
-        .formParam("familyName", "IAC")
+        .formParam("givenNames", "#{forenames}")
+        .formParam("familyName", "#{surname}")
         .formParam("saveAndContinue", "")
         .check(CsrfCheck.save)
-        .check(substring("What is your date of birth")))
+        .check(substring("What is your date of birth"))
+        .check(substring("The information entered does not match the details held by the Home Office").notExists))
 
     }
 
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
-    //Enter Date of Birth Details
+    //Enter Date of Birth Details (should match either mock or home office data)
     .group("AIP_140_DateOfBirth") {
 
       exec(http("AIP_140_010_DateOfBirth")
         .post(BaseURL + "/date-birth")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
-        .formParam("day", "#{randomDay}")
-        .formParam("month", "#{randomMonth}")
+        .formParam("day", "#{dobDay}")
+        .formParam("month", "#{dobMonth}")
         .formParam("year", "#{dobYear}")
         .formParam("saveAndContinue", "")
         .check(CsrfCheck.save)
@@ -302,8 +331,8 @@ object AIP_CreateAppeal {
         .post(BaseURL + "/date-letter-sent")
         .headers(Headers.commonHeader)
         .formParam("_csrf", "#{csrf}")
-        .formParam("day", "#{randomDay}")
-        .formParam("month", "#{randomMonth}")
+        .formParam("day", "#{letterDay}")
+        .formParam("month", "#{letterMonth}")
         .formParam("year", "#{letterYear}")
         .formParam("saveAndContinue", "")
         .check(CsrfCheck.save)
@@ -662,9 +691,12 @@ object AIP_CreateAppeal {
     group("AIP_357_DeleteDraftAppeal") {
 
       exec(http("AIP_357_010_DeleteAppeal")
-        .get(BaseURL + "/delete-draft-appeal/#{draftAppealRef}?Delete+draft+appeal=")
+        .post(BaseURL + "/delete-draft-appeal/#{draftAppealRef}")
         .headers(Headers.commonHeader)
-        .check(substring("Your appeals")))
+        .formParam("_csrf", "#{csrf}")
+        .formParam("Delete draft appeal", "")
+        .check(substring("Your appeals"))
+        .check(substring("delete-draft-appeal").notExists))
 
     }
 
@@ -681,6 +713,29 @@ object AIP_CreateAppeal {
         .check(substring("Appeal an immigration or asylum decision")))
 
     }
+
+    .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
+
+  // Generate a Microsoft token for the Home Office inbound API call with the 24-week decision
+  val GenerateHomeOfficeMicrosoftToken =
+
+    exec(http("AIP_000_HomeOfficeMicrosoftToken")
+      .post(MicrosoftURL + s"/$vaultTenantId/oauth2/v2.0/token")
+      .header("Content-Type", "application/x-www-form-urlencoded")
+      .formParam("client_id", s"$vaultClientId")
+      .formParam("scope", s"api://$vaultAppId/.default")
+      .formParam("client_secret", s"$vaultClientSecret")
+      .formParam("grant_type", s"$vaultGrantType")
+      .check(jsonPath("$.access_token").saveAs("microsoftToken")))
+
+  val HomeOfficeInbound24WeekDecisionAPI =
+
+    exec(http("AIP_000_HomeOfficeInbound24WeekDecision")
+      .post(ApiGatewayURL + "/ia-home-office-api/home-office-statutory-timeframe-status")
+      .header("Authorization", "Bearer #{microsoftToken}")
+      .header("Content-Type", "application/json")
+      .body(ElFileBody("bodies/HO_24WeekDecision.json"))
+      .check(jsonPath("$.hmctsReferenceNumber").is("#{appealRef}")))
 
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 

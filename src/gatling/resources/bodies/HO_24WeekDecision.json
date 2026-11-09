@@ -1,0 +1,18 @@
+{
+  "hmctsReferenceNumber": "#{appealRef}",
+  "uan": "#{homeOfficeRefNumber}",
+  "familyName": "#{surname}",
+  "givenNames": "#{forenames}",
+  "dateOfBirth": "#{dobYear}-#{dobMonth}-#{dobDay}",
+  "timeStamp": "#{dateTimeNow}",
+  "stf24weekCohorts": [
+    {
+      "name": "someCohortName",
+      "included": true
+    },
+    {
+      "name": "someOtherCohortName",
+      "included": false
+    }
+  ]
+}

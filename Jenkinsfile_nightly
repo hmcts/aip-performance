@@ -16,6 +16,13 @@ def component = "aip-frontend"
 def secrets = [
         'ccd-perftest': [
                 secret('ccd-api-gateway-oauth2-client-secret', 'CLIENT_SECRET')
+        ],
+        'ia-perftest': [
+                secret('apim-ia-home-office-app-id', 'IA_HO_APP_ID'),
+                secret('apim-ia-home-office-client-id', 'IA_HO_CLIENT_ID'),
+                secret('apim-ia-home-office-tenant-id', 'IA_HO_TENANT_ID'),
+                secret('apim-ia-homeoffice-client-secret', 'IA_HO_CLIENT_SECRET'),
+                secret('apim-ia-homeoffice-grant-type', 'IA_HO_GRANT_TYPE')
         ]
 ]
 
