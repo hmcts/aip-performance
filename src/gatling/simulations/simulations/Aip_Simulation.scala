@@ -143,7 +143,7 @@ class Aip_Simulation extends Simulation {
       case "perftest" | "pipeline" => //currently using the same assertions for a performance test and the pipeline
         if (debugMode == "off") {
           Seq(global.successfulRequests.percent.gte(95),
-            details("CCD_SubmitEvent_requestHomeOfficeData").successfulRequests.percent.gte(80),
+            details("CCD_SearchCases").successfulRequests.percent.gte(80),
           )
         }
         else {
