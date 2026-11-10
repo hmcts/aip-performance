@@ -60,6 +60,7 @@ class Aip_Simulation extends Simulation {
     .baseUrl(BaseURL)
     .inferHtmlResources()
     .silentResources
+    .disableAutoOrigin //required as Microsoft rejects the origin header for the HO token generation call
 
   before{
     println(s"Test Type: ${testType}")
@@ -84,6 +85,9 @@ class Aip_Simulation extends Simulation {
       .exec(AIP_CreateAppeal.FeeSupport)
       .exec(AIP_CreateAppeal.CheckAndSend)
       .exec(AIP_CreateAppeal.AppealOverview)
+      //Simulating the asynchronous 24-week decision inbound call from the Home Office
+      .exec(AIP_CreateAppeal.GenerateHomeOfficeMicrosoftToken)
+      .exec(AIP_CreateAppeal.HomeOfficeInbound24WeekDecisionAPI)
       //A second appeal is created but only to be deleted shortly after
       .exec(AIP_CreateAppeal.CreateAppeal)
       .exec(AIP_CreateAppeal.AboutAppeal)
@@ -91,7 +95,7 @@ class Aip_Simulation extends Simulation {
       .exec(AIP_CreateAppeal.ViewAppeal)
       .exec(AIP_CreateAppeal.DeleteDraftAppeal)
       .exec(AIP_CreateAppeal.AIPLogout)
-      //Caseworker requests Home Office Data then Requests Respondent Evidence
+      //Caseworker progresses flow
       .feed(CaseworkerFeeder)
       //Fetch the case by searching CCD by appealRef
       .exec(CcdHelper.searchCases("#{cw-username}", "#{cw-password}", CcdCaseTypes.IA_Asylum, "bodies/CCD_searchCaseByAppealRef.json",
@@ -100,8 +104,7 @@ class Aip_Simulation extends Simulation {
           jsonPath("$.cases[0].id").saveAs("caseId")
         )))
       .pause(1)
-      .exec(CcdHelper.addCaseEvent("#{cw-username}", "#{cw-password}", CcdCaseTypes.IA_Asylum, "#{caseId}", "requestHomeOfficeData", "bodies/CCD_requestHomeOfficeData.json"))
-      //.pause(1)
+      // Complete the flow from here. The below call is used, but further along in the flow of a 24-week case
       //.exec(CcdHelper.addCaseEvent("#{cw-username}", "#{cw-password}", CcdCaseTypes.IA_Asylum, "#{caseId}", "requestRespondentEvidence", "bodies/CCD_requestRespondentEvidence.json"))
       .exec{
         session =>
