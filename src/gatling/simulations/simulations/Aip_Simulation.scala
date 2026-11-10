@@ -104,8 +104,7 @@ class Aip_Simulation extends Simulation {
           jsonPath("$.cases[0].id").saveAs("caseId")
         )))
       .pause(1)
-//      .exec(CcdHelper.addCaseEvent("#{cw-username}", "#{cw-password}", CcdCaseTypes.IA_Asylum, "#{caseId}", "requestHomeOfficeData", "bodies/CCD_requestHomeOfficeData.json"))
-      //.pause(1)
+      // Complete the flow from here. The below call is used, but further along in the flow of a 24-week case
       //.exec(CcdHelper.addCaseEvent("#{cw-username}", "#{cw-password}", CcdCaseTypes.IA_Asylum, "#{caseId}", "requestRespondentEvidence", "bodies/CCD_requestRespondentEvidence.json"))
       .exec{
         session =>
@@ -113,9 +112,9 @@ class Aip_Simulation extends Simulation {
         session
       }
     }
-//    .doIf("#{emailAddress.exists()}") {
- //     exec(DeleteUser.deleteUser)
- //   }
+    .doIf("#{emailAddress.exists()}") {
+      exec(DeleteUser.deleteUser)
+    }
 
   //defines the Gatling simulation model, based on the inputs
   def simulationProfile(simulationType: String, userPerSecRate: Double, numberOfPipelineUsers: Double): Seq[OpenInjectionStep] = {
