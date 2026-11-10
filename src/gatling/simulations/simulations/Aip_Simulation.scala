@@ -95,7 +95,7 @@ class Aip_Simulation extends Simulation {
       .exec(AIP_CreateAppeal.ViewAppeal)
       .exec(AIP_CreateAppeal.DeleteDraftAppeal)
       .exec(AIP_CreateAppeal.AIPLogout)
-      //Caseworker requests Home Office Data then Requests Respondent Evidence
+      //Caseworker progresses flow
       .feed(CaseworkerFeeder)
       //Fetch the case by searching CCD by appealRef
       .exec(CcdHelper.searchCases("#{cw-username}", "#{cw-password}", CcdCaseTypes.IA_Asylum, "bodies/CCD_searchCaseByAppealRef.json",
