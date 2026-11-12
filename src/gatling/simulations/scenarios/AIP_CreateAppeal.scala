@@ -22,11 +22,15 @@ object AIP_CreateAppeal {
   val MinThinkTime = Environment.minThinkTime
   val MaxThinkTime = Environment.maxThinkTime
 
-  val caseDetailsHomeOfficeFeeder = csv("CaseDetailsHomeOffice.csv").random
+  val caseDetailsHomeOfficeFeeder = csv("CaseDetailsHomeOffice.csv")//.random
   val caseDetailsMockFeeder = csv("CaseDetailsMock.csv").random
   val postcodeFeeder = csv("postcodes.csv").random
 
-  val USE_MOCK = true //true to use Mock, false to use Home Office integration (needs to match flux config)
+  val USE_MOCK = true //true to use Mock, false to use Home Office integration (needs to match flux config and see notes below)
+  // IMPORTANT:
+  // Home Office integration should not be used for load testing without prior approval. Creating large volumes of appeals
+  // within the Home Office test environment has knock-on downstream impacts for them, so e2e integration should only be used sparingly
+  // unless agreed otherwise with the project team and/or the Home Office.
 
   val env = System.getProperty("env", "perftest")
 
@@ -112,9 +116,6 @@ object AIP_CreateAppeal {
 
     .pause(MinThinkTime.seconds, MaxThinkTime.seconds)
 
-  //Login into Application with an IAC Citizen account, the user sees their dashboard
-  //The application currently (10/2026) has a bug where login has to be run through
-  //twice, as the first password submission redirects to the login start
   val Login =
 
     //Sign in
