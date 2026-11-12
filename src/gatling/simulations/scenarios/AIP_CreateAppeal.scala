@@ -22,7 +22,7 @@ object AIP_CreateAppeal {
   val MinThinkTime = Environment.minThinkTime
   val MaxThinkTime = Environment.maxThinkTime
 
-  val caseDetailsHomeOfficeFeeder = csv("CaseDetailsHomeOffice.csv")//.random
+  val caseDetailsHomeOfficeFeeder = csv("CaseDetailsHomeOffice.csv").random
   val caseDetailsMockFeeder = csv("CaseDetailsMock.csv").random
   val postcodeFeeder = csv("postcodes.csv").random
 
