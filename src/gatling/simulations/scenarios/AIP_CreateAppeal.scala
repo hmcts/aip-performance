@@ -27,7 +27,8 @@ object AIP_CreateAppeal {
   val postcodeFeeder = csv("postcodes.csv").random
 
   val USE_MOCK = true //true to use Mock, false to use Home Office integration (needs to match flux config and see notes below)
-  // IMPORTANT:
+  // IMPORTANT NOTES:
+  // The Mock has been configured with a 400ms fixed delay to simulate outbound calls to the HO (based on values run against their test environment).
   // Home Office integration should not be used for load testing without prior approval. Creating large volumes of appeals
   // within the Home Office test environment has knock-on downstream impacts for them, so e2e integration should only be used sparingly
   // unless agreed otherwise with the project team and/or the Home Office.

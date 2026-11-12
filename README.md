@@ -13,7 +13,7 @@ Case Workers to manage and progress cases, Judiciary to review the case remains 
 5. Documents uploaded through manage appeal are stored into Document store and also updates CCD with url of the stored document
    Notify is used to send notification of case creation and progression of the case
 6. Data is validated with the Home Office at different stages through the application process 
-7. A mock is available to avoid overloading the Home Office test environment 
+7. A mock is available to avoid overloading the Home Office test environment and has a fixed 400ms delay 
 8. The Home Office integration (and data) can be used occassionally and not for load testing
 9. Toggle between using the mock or Home Office connectivity by changing `USE_MOCK` in the scenario file.
 
