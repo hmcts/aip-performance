@@ -75,7 +75,6 @@ class Aip_Simulation extends Simulation {
       .exec(AIP_CreateAppeal.Homepage)
       .exec(AIP_CreateAppeal.Eligibility)
       .exec(AIP_CreateAppeal.Login)
-      .exec(AIP_CreateAppeal.Login)
       .exec(AIP_CreateAppeal.CreateAppeal)
       .exec(AIP_CreateAppeal.AboutAppeal)
       .exec(AIP_CreateAppeal.TypeOfAppeal)
